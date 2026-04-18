@@ -972,6 +972,17 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 
 	renderAfterBattleControls() {
 		const room = this.props.room;
+
+		if (Config.researchMode) {
+			return <div class="controls">
+				<p>
+					<button class="button" data-cmd="/close" style="width: 100%; padding: 12px; font-size: 12pt;">
+						<strong>Return to Teams</strong>
+					</button>
+				</p>
+			</div>;
+		}
+
 		const isNotTiny = room.width > 700;
 		return <div class="controls">
 			<p>

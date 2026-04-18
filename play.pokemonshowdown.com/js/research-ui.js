@@ -5,8 +5,25 @@
 
 ResearchLandingPage=function(_preact$Component){function ResearchLandingPage(){var _this;for(var _len=arguments.length,args=new Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}_this=_preact$Component.call.apply(_preact$Component,[this].concat(args))||this;_this.
 state={
-selectedTeamIndex:-1
+selectedTeamIndex:-1,
+isWaiting:false
 };_this.
+psSubscription=null;_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -48,20 +65,32 @@ if(selectedTeamIndex===-1)return;
 
 var team=Config.researchTeams[selectedTeamIndex];
 
-PS.alert("Selected "+team.name+". Battle logic coming soon!");
+_this.setState({isWaiting:true});
 
 
+if(PS.user.userid!=='testplayer'){
+PS.user.changeName('TestPlayer');
+}
 
+PS.send("/utm "+team.packedTeam);
+PS.send("/challenge FuzzyBot, gen9vgc2025regh");
+};return _this;}_inheritsLoose(ResearchLandingPage,_preact$Component);var _proto=ResearchLandingPage.prototype;_proto.componentDidMount=function componentDidMount(){var _this2=this;document.body.classList.add('research-mode');for(var roomid in PS.rooms){if(roomid&&!roomid.startsWith('battle-')){var room=PS.rooms[roomid];if(room){room.minimized=true;if(roomid==='rooms'||roomid==='lobby'){PS.hideRightRoom();}}}}this.psSubscription=PS.subscribe(function(){if(_this2.state.isWaiting&&Object.keys(PS.rooms).some(function(id){return id.startsWith('battle-');})){_this2.setState({isWaiting:false});}});if(PS.user.userid!=='testplayer'){PS.user.changeName('TestPlayer');}PS.update();};_proto.componentWillUnmount=function componentWillUnmount(){document.body.classList.remove('research-mode');if(this.psSubscription){this.psSubscription.unsubscribe();this.psSubscription=null;}};_proto.
 
-
-
-};return _this;}_inheritsLoose(ResearchLandingPage,_preact$Component);var _proto=ResearchLandingPage.prototype;_proto.componentDidMount=function componentDidMount(){document.body.classList.add('research-mode');for(var roomid in PS.rooms){if(roomid&&!roomid.startsWith('battle-')){var room=PS.rooms[roomid];if(room){room.minimized=true;if(roomid==='rooms'||roomid==='lobby'){PS.hideRightRoom();}}}}PS.update();};_proto.componentWillUnmount=function componentWillUnmount(){document.body.classList.remove('research-mode');};_proto.
-
-render=function render(){var _this2=this;
+render=function render(){var _this3=this;
 var teams=Config.researchTeams||[];
+var _this$state=this.state,isWaiting=_this$state.isWaiting,selectedTeamIndex=_this$state.selectedTeamIndex;
 
 return(
 preact.h("div",{"class":"research-landing"},
+isWaiting?
+preact.h("div",{"class":"research-waiting"},
+preact.h("div",{"class":"spinner"}),
+preact.h("h1",null,"Preparing Match..."),
+preact.h("p",null,"Challenging ",preact.h("strong",null,"FuzzyBot")," with your selected team."),
+preact.h("button",{"class":"button",style:"margin-top: 20px",onClick:function(){return _this3.setState({isWaiting:false});}},"Cancel")
+):
+
+preact.h(preact.Fragment,null,
 preact.h("div",{"class":"research-header"},
 preact.h("h1",null,"VGC Research Project"),
 preact.h("p",null,"Please select a team to challenge the RL bot. Double-click to view the Pok\xE9Paste.")
@@ -71,38 +100,39 @@ teams.map(function(team,index){return(
 preact.h(ResearchTeamCard,{
 key:index,
 team:team,
-isSelected:_this2.state.selectedTeamIndex===index,
-onClick:function(){return _this2.handleSelect(index);},
-onDblClick:function(){return _this2.handleDoubleClick(team.pokePasteUrl);}}
+isSelected:selectedTeamIndex===index,
+onClick:function(){return _this3.handleSelect(index);},
+onDblClick:function(){return _this3.handleDoubleClick(team.pokePasteUrl);}}
 ));}
 )
 ),
 preact.h("div",{"class":"research-footer"},
 preact.h("button",{
-"class":"button big "+(this.state.selectedTeamIndex===-1?'disabled':''),
-disabled:this.state.selectedTeamIndex===-1,
+"class":"button big "+(selectedTeamIndex===-1?'disabled':''),
+disabled:selectedTeamIndex===-1,
 onClick:this.handleBattle},
 
 preact.h("strong",null,"Challenge Bot!")
 )
 )
+)
+
 ));
 
 };return ResearchLandingPage;}(preact.Component);var
 
 
-ResearchTeamCard=function(_preact$Component2){function ResearchTeamCard(){var _this3;for(var _len2=arguments.length,args=new Array(_len2),_key2=0;_key2<_len2;_key2++){args[_key2]=arguments[_key2];}_this3=_preact$Component2.call.apply(_preact$Component2,[this].concat(args))||this;_this3.
+ResearchTeamCard=function(_preact$Component2){function ResearchTeamCard(){var _this4;for(var _len2=arguments.length,args=new Array(_len2),_key2=0;_key2<_len2;_key2++){args[_key2]=arguments[_key2];}_this4=_preact$Component2.call.apply(_preact$Component2,[this].concat(args))||this;_this4.
 
 
 
 
 
-packedTeam='';_this3.
-icons=null;return _this3;}_inheritsLoose(ResearchTeamCard,_preact$Component2);var _proto2=ResearchTeamCard.prototype;_proto2.
+packedTeam='';_this4.
+icons=null;return _this4;}_inheritsLoose(ResearchTeamCard,_preact$Component2);var _proto2=ResearchTeamCard.prototype;_proto2.
 
 componentWillMount=function componentWillMount(){
 var team=this.props.team;
-
 var sets=Teams["import"](team.teamExport);
 this.packedTeam=Teams.pack(sets);
 team.packedTeam=this.packedTeam;

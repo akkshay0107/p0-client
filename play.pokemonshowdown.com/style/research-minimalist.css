@@ -1,8 +1,3 @@
-/*********************************************************
- * RESEARCH MODE: MINIMALIST WHITE & BLACK THEME
- *********************************************************/
-
-/* Global Reset for Research Mode - Pure White & Black */
 .research-mode, 
 .research-mode body,
 .research-mode #ps-frame {
@@ -11,7 +6,6 @@
     color: #000000 !important;
 }
 
-/* Hide navigation, header, and sidebar UI entirely on landing page */
 .research-mode .header,
 .research-mode .ps-room-wrapper.right-panel,
 .research-mode .mainmenufooter,
@@ -20,12 +14,14 @@
 .research-mode .tabbar,
 .research-mode .roomcounters,
 .research-mode .roomlist,
+.research-mode .userbar,
+.research-mode .chat-userlist,
+.research-mode button[data-href="battleoptions"],
 .research-mode input[name="roomsearch"],
 .research-mode select[name="sections"] {
     display: none !important;
 }
 
-/* Ensure the main room takes up the full viewport */
 .research-mode .ps-room {
     top: 0 !important;
     left: 0 !important;
@@ -40,7 +36,6 @@
     max-width: none !important;
 }
 
-/* Landing Page Layout - Full Focus Centering */
 .research-landing {
     background: #ffffff !important;
     color: #000000 !important;
@@ -49,7 +44,7 @@
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important; /* Vertical centering */
+    justify-content: center !important;
     min-height: 100vh !important;
     width: 100% !important;
 }
@@ -82,7 +77,6 @@
     max-width: 600px;
 }
 
-/* Team Card - Modern Minimalist */
 .research-team-card {
     background: #ffffff !important;
     border: 1.5px solid #e5e5e5 !important;
@@ -120,7 +114,6 @@
     opacity: 0.8;
 }
 
-/* PSIcon scaling for minimalist fit */
 .research-team-card .picon {
     transform: scale(0.9);
 }
@@ -130,7 +123,6 @@
     font-size: 14pt;
 }
 
-/* Footer & Primary Action */
 .research-footer {
     margin-top: 40px;
     width: 100%;
@@ -167,7 +159,6 @@
     cursor: not-allowed !important;
 }
 
-/* EXEMPT BATTLES: Revert to standard PS styling */
 .ps-room.battle,
 .ps-room.battle * {
     background: initial !important;
@@ -176,11 +167,39 @@
 }
 
 .research-mode .ps-room.battle {
-    top: 56px !important; /* Restore header space in battles */
+    top: 0 !important;
 }
 
-/* Ensure the background image is removed from body specifically */
 body.research-mode {
     background-image: none !important;
     background-color: #ffffff !important;
+}
+
+.research-waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: researchFadeIn 0.3s ease-out;
+}
+
+@keyframes researchFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #000000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 25px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

@@ -6,28 +6,45 @@ import { Teams } from "./battle-teams";
 export class ResearchLandingPage extends preact.Component {
 	state = {
 		selectedTeamIndex: -1,
+		isWaiting: false,
 	};
+	psSubscription: any = null;
 
 	override componentDidMount() {
 		document.body.classList.add('research-mode');
-		// Force all other rooms to be minimized/hidden to prevent popups
 		for (const roomid in PS.rooms) {
 			if (roomid && !roomid.startsWith('battle-')) {
 				const room = PS.rooms[roomid];
 				if (room) {
 					room.minimized = true;
-					// If it's a rooms list or lobby, try to close it or keep it hidden
 					if (roomid === 'rooms' || roomid === 'lobby') {
 						PS.hideRightRoom();
 					}
 				}
 			}
 		}
+
+		this.psSubscription = PS.subscribe(() => {
+			// Clear waiting state if any battle room is open
+			if (this.state.isWaiting && Object.keys(PS.rooms).some(id => id.startsWith('battle-'))) {
+				this.setState({ isWaiting: false });
+			}
+		});
+
+		// Set default username for research mode
+		if (PS.user.userid !== 'testplayer') {
+			PS.user.changeName('TestPlayer');
+		}
+
 		PS.update();
 	}
 
 	override componentWillUnmount() {
 		document.body.classList.remove('research-mode');
+		if (this.psSubscription) {
+			this.psSubscription.unsubscribe();
+			this.psSubscription = null;
+		}
 	}
 
 	handleSelect = (index: number) => {
@@ -47,45 +64,59 @@ export class ResearchLandingPage extends preact.Component {
 		if (selectedTeamIndex === -1) return;
 
 		const team = Config.researchTeams![selectedTeamIndex];
-		// Phase 3: Transition to battle (mock for now)
-		PS.alert(`Selected ${team.name}. Battle logic coming soon!`);
 		
-		// In the future, this would send the battle request:
-		/*
+		this.setState({ isWaiting: true });
+
+		// Ensure we have the correct username before challenging
+		if (PS.user.userid !== 'testplayer') {
+			PS.user.changeName('TestPlayer');
+		}
+
 		PS.send(`/utm ${team.packedTeam}`);
-		PS.send(`/search gen9vgcregh2025`);
-		*/
+		PS.send(`/challenge FuzzyBot, gen9vgc2025regh`);
 	};
 
 	override render() {
 		const teams = Config.researchTeams || [];
+		const { isWaiting, selectedTeamIndex } = this.state;
 
 		return (
 			<div class="research-landing">
-				<div class="research-header">
-					<h1>VGC Research Project</h1>
-					<p>Please select a team to challenge the RL bot. Double-click to view the PokéPaste.</p>
-				</div>
-				<div class="research-team-list">
-					{teams.map((team, index) => (
-						<ResearchTeamCard
-							key={index}
-							team={team}
-							isSelected={this.state.selectedTeamIndex === index}
-							onClick={() => this.handleSelect(index)}
-							onDblClick={() => this.handleDoubleClick(team.pokePasteUrl)}
-						/>
-					))}
-				</div>
-				<div class="research-footer">
-					<button 
-						class={`button big ${this.state.selectedTeamIndex === -1 ? 'disabled' : ''}`}
-						disabled={this.state.selectedTeamIndex === -1}
-						onClick={this.handleBattle}
-					>
-						<strong>Challenge Bot!</strong>
-					</button>
-				</div>
+				{isWaiting ? (
+					<div class="research-waiting">
+						<div class="spinner"></div>
+						<h1>Preparing Match...</h1>
+						<p>Challenging <strong>FuzzyBot</strong> with your selected team.</p>
+						<button class="button" style="margin-top: 20px" onClick={() => this.setState({ isWaiting: false })}>Cancel</button>
+					</div>
+				) : (
+					<>
+						<div class="research-header">
+							<h1>VGC Research Project</h1>
+							<p>Please select a team to challenge the RL bot. Double-click to view the PokéPaste.</p>
+						</div>
+						<div class="research-team-list">
+							{teams.map((team, index) => (
+								<ResearchTeamCard
+									key={index}
+									team={team}
+									isSelected={selectedTeamIndex === index}
+									onClick={() => this.handleSelect(index)}
+									onDblClick={() => this.handleDoubleClick(team.pokePasteUrl)}
+								/>
+							))}
+						</div>
+						<div class="research-footer">
+							<button 
+								class={`button big ${selectedTeamIndex === -1 ? 'disabled' : ''}`}
+								disabled={selectedTeamIndex === -1}
+								onClick={this.handleBattle}
+							>
+								<strong>Challenge Bot!</strong>
+							</button>
+						</div>
+					</>
+				)}
 			</div>
 		);
 	}
@@ -102,10 +133,9 @@ class ResearchTeamCard extends preact.Component<{
 
 	override componentWillMount() {
 		const { team } = this.props;
-		// Import and pack if not already done
 		const sets = Teams.import(team.teamExport);
 		this.packedTeam = Teams.pack(sets);
-		team.packedTeam = this.packedTeam; // Cache it back in config
+		team.packedTeam = this.packedTeam;
 		
 		this.icons = Teams.unpackSpeciesOnly(this.packedTeam).map(pokemon => (
 			<PSIcon pokemon={pokemon} />

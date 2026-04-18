@@ -231,7 +231,7 @@ export class PSStorage {
 		}
 		if (Config.testclient) {
 			return;
-		} else if (`${location.protocol}//${location.hostname}` === PSStorage.origin) {
+		} else if (Config.researchMode || `${location.protocol}//${location.hostname}` === PSStorage.origin) {
 			// Same origin, everything can be kept as default
 			Config.server ||= Config.defaultserver;
 			return;

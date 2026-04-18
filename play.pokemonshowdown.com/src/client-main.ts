@@ -673,6 +673,14 @@ class PSUser extends PSStreamModel<PSLoginState | null> {
 			return;
 		}
 		this.loggingIn = name;
+
+		if (Config.researchMode) {
+			PS.send('/trn ' + name);
+			this.update({ success: true });
+			this.updateRegExp();
+			return;
+		}
+
 		this.update(null);
 		PSLoginServer.rawQuery(
 			'getassertion', { userid, challstr: this.challstr }
@@ -805,7 +813,7 @@ class PSServer {
 	altport = Config.defaultserver.altport;
 	registered = Config.defaultserver.registered;
 	prefix = '/showdown';
-	protocol: 'http' | 'https' = Config.defaultserver.httpport ? 'https' : 'http';
+	protocol: 'http' | 'https' = (Config.defaultserver.host === 'localhost' || !Config.defaultserver.httpport) ? 'http' : 'https';
 	groups: { [symbol: string]: PSGroup } = {
 		'#': {
 			name: "Room Owner (#)",
@@ -1180,6 +1188,10 @@ export class PSRoom extends PSStreamModel<Args | null> implements RoomOptions {
 			const battle = (room as BattleRoom)?.battle;
 
 			if (room?.type === "battle" && !battle.ended && battle.mySide.id === PS.user.userid && !battle.isReplay) {
+				if (Config.researchMode) {
+					PS.alert("Forfeiting is disabled in Research Mode. Please play the match to completion.");
+					return;
+				}
 				PS.join("forfeitbattle" as RoomID, { parentElem: elem });
 				return;
 			}

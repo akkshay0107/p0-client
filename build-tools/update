@@ -26,10 +26,6 @@ function escapeRegex(string) {
 	return string.replace(/[/*.]/g, '\\$&');
 }
 
-/*********************************************************
- * Update version number
- *********************************************************/
-
 process.stdout.write("Updating version... ");
 
 let version = require('../package.json').version;
@@ -47,9 +43,6 @@ try {
 
 const routes = JSON.parse(fs.readFileSync('config/routes.json'));
 
-/*********************************************************
- * Update Research Teams
- *********************************************************/
 const researchTeams = [];
 const teamDir = 'teams';
 if (fs.existsSync(teamDir)) {
@@ -89,7 +82,6 @@ Config.researchMode = true;
 Config.researchTeams = ${JSON.stringify(researchTeams)};
 ${AUTOCONFIG_END}`;
 
-// remove old automatically generated configuration and add the new one
 let configBuf = fs.readFileSync('config/config.js', UTF8);
 if (autoconfigRegex.test(configBuf)) {
 	configBuf = configBuf.replace(autoconfigRegex, autoconfig);
@@ -98,10 +90,6 @@ if (autoconfigRegex.test(configBuf)) {
 }
 fs.writeFileSync('config/config.js', configBuf);
 console.log("DONE");
-
-/*********************************************************
- * Compile TS files
- *********************************************************/
 
 process.stdout.write("Compiling TS files... ");
 
@@ -125,7 +113,6 @@ if (process.argv[2] === 'full') {
 } else {
 	try {
 		fs.statSync('play.pokemonshowdown.com/data/graphics.js');
-		// graphics.js exists, recompile it
 		delete compileOpts.ignore;
 	} catch {}
 }
@@ -138,7 +125,6 @@ compiledFiles += compiler.compileToDir(`teams.pokemonshowdown.com/src`, `teams.p
 
 try {
 	fs.statSync('play.pokemonshowdown.com/data/text.js');
-	// text.js exists, we can compile battledata
 	compiledFiles += compiler.compileToFile(
 		[
 			'play.pokemonshowdown.com/src/battle-dex.ts',
@@ -169,10 +155,6 @@ console.log(
 	`(${compiledFiles} ${compiledFiles !== 1 ? "files" : "file"} in ${(diff[0] + diff[1] / 1e9).toFixed(3)}s) DONE`
 );
 
-/*********************************************************
- * Update cachebuster and News
- *********************************************************/
-
 process.stdout.write("Updating cachebuster and URLs... ");
 
 const URL_REGEX = /(src=|href=|linkStyle\()"(.*?)(\?[a-z0-9]*?)?"/g;
@@ -186,7 +168,7 @@ function addCachebuster(_, attr, url, urlQuery) {
 
 	if (urlQuery) {
 		if (url.startsWith('/')) {
-			let hash = Math.random(); // just in case creating the hash fails
+			let hash = Math.random();
 			try {
 				const filename = url.slice(1).replace('/' + routes.client + '/', '');
 				const fstr = fs.readFileSync(filename, UTF8);
@@ -195,7 +177,6 @@ function addCachebuster(_, attr, url, urlQuery) {
 
 			return attr + '"' + url + '?' + hash + '"';
 		} else {
-			// TODO: generalize better
 			let hash;
 			for (const subdir of ['teams', 'replays']) {
 				if (hash) break;
@@ -212,7 +193,6 @@ function addCachebuster(_, attr, url, urlQuery) {
 	}
 }
 
-// add hashes to js and css files and rewrite URLs
 let indexContents = fs.readFileSync('play.pokemonshowdown.com/index.template.html', UTF8);
 indexContents = indexContents.replace(URL_REGEX, addCachebuster);
 let preactIndexContents = fs.readFileSync('play.pokemonshowdown.com/preactalpha.template.html', UTF8);
@@ -222,7 +202,6 @@ crossprotocolContents = crossprotocolContents.replace(URL_REGEX, addCachebuster)
 let replayEmbedContents = fs.readFileSync('play.pokemonshowdown.com/js/replay-embed.template.js', UTF8);
 replayEmbedContents = replayEmbedContents.replace(/play\.pokemonshowdown\.com/g, routes.client);
 
-// add news, only if it's actually likely to exist
 process.stdout.write("and news... ");
 let stdout = '';
 let newsid = 0;
@@ -266,7 +245,6 @@ if (indexContents2) {
 fs.writeFileSync('play.pokemonshowdown.com/preactalpha.html', preactIndexContents);
 fs.writeFileSync('play.pokemonshowdown.com/crossprotocol.html', crossprotocolContents);
 
-// Ensure config.js is a hard copy for servers that don't follow symlinks
 try {
 	fs.unlinkSync('play.pokemonshowdown.com/config/config.js');
 } catch {}
