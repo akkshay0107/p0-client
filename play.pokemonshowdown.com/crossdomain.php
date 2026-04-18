@@ -14,7 +14,7 @@ if (preg_match('/^([a-z0-9-_\.]*?)\.psim\.us$/', $host, $m)) {
 	die; // not authorised
 }
 
-$protocol = @$_REQUEST['protocol'] === 'https:' ? 'https:' : 'http:';
+$protocol = @$_REQUEST['protocol'] ?? 'http:';
 $portType = ($protocol === 'http:' ? 'port' : 'httpsport');
 
 if ($config['host'] !== 'showdown') {

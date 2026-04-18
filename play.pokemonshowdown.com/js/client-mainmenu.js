@@ -921,9 +921,6 @@
 			var teraPreviewDefault = format && BattleFormats[format] ? BattleFormats[format].teraPreviewDefault : false;
 			buf += '<p' + (!teraPreviewDefault ? ' class="hidden">' : '>');
 			buf += '<label class="checkbox"><input type="checkbox" name="terapreview" /> <abbr title="Start a battle with Tera Type Preview">Tera Type Preview</abbr></label></p>';
-			var itemClauseDefault = format && BattleFormats[format] ? BattleFormats[format].itemClauseDefault : false;
-			buf += '<p' + (!itemClauseDefault ? ' class="hidden">' : '>');
-			buf += '<label class="checkbox"><input type="checkbox" name="itemclause" /> <abbr title="Start a battle with Item Clause">Item Clause</abbr></label></p>';
 			buf += '<p class="buttonbar"><button name="makeChallenge" class="button"><strong>Challenge</strong></button> <button type="button" name="dismissChallenge" class="button">Cancel</button></p></form>';
 			$challenge.html(buf);
 		},
@@ -981,13 +978,6 @@
 				var hasCustomRulesT = format.includes('@@@');
 				format += hasCustomRulesT ? ', ' : '@@@';
 				format += 'Tera Type Preview';
-			}
-
-			var itemClause = $pmWindow.find('input[name=itemclause]').is(':checked');
-			if (itemClause) {
-				var hasCustomRulesT = format.includes('@@@');
-				format += hasCustomRulesT ? ', ' : '@@@';
-				format += 'Item Clause = 1';
 			}
 
 			var team = null;
@@ -1280,8 +1270,8 @@
 				// avoiding that decision for now because it requires either an ugly hack
 				// or an overhaul of BattleFormats.
 				this.open = Storage.prefs('openformats') || {
-					"S/V Singles": true, "S/V Doubles": true, "Unofficial Metagames": true, "National Dex": true, "Ladder Spotlight": true,
-					"Other Metagames": true,
+					"S/V Singles": true, "S/V Doubles": true, "Unofficial Metagames": true, "National Dex": true, "OM of the Month": true,
+					"Other Metagames": true, "Randomized Format Spotlight": true, "RoA Spotlight": true,
 					// For AFD
 					"Random Meta of the Decade": true
 				};
@@ -1290,8 +1280,7 @@
 			if (!this.search) this.search = "";
 			this.onselect = data.onselect;
 			this.selectType = data.selectType;
-			this.$form = this.sourceEl.closest('form');
-			if (!this.selectType) this.selectType = (this.$form.data('search') ? 'search' : 'challenge');
+			if (!this.selectType) this.selectType = (this.sourceEl.closest('form').data('search') ? 'search' : 'challenge');
 
 			var html = '<p><ul class="popupmenu"><li><input name="search" placeholder="Search formats" value="' + this.search + '" class="textbox autofocus" autocomplete="off" />';
 			html += '</li></ul></p><span name="formats">';
@@ -1413,19 +1402,17 @@
 			return true;
 		},
 		selectFormat: function (format) {
-			var $form = this.$form.length ? this.$form : this.sourceEl.closest('form');
-
 			if (this.onselect) {
 				this.onselect(format);
 			} else if (app.rooms[''].curFormat !== format) {
 				app.rooms[''].curFormat = format;
 				app.rooms[''].curTeamIndex = -1;
-				var $teamButton = $form.find('button[name=team]');
+				var $teamButton = this.sourceEl.closest('form').find('button[name=team]');
 				if ($teamButton.length) $teamButton.replaceWith(app.rooms[''].renderTeams(format));
 
-				var $bestOfCheckbox = $form.find('input[name=bestof]');
-				var $bestOfValueInput = $form.find('input[name=bestofvalue]');
-				if ($bestOfCheckbox.length && $bestOfValueInput.length) {
+				var $bestOfCheckbox = this.sourceEl.closest('form').find('input[name=bestof]');
+				var $bestOfValueInput = this.sourceEl.closest('form').find('input[name=bestofvalue]');
+				if ($bestOfCheckbox && $bestOfValueInput) {
 					var $parentTag = $bestOfCheckbox.parent().parent();
 					var bestOfDefault = BattleFormats[format] && BattleFormats[format].bestOfDefault;
 					if (bestOfDefault) {
@@ -1437,8 +1424,8 @@
 					}
 				}
 
-				var $teraPreviewCheckbox = $form.find('input[name=terapreview]');
-				if ($teraPreviewCheckbox.length) {
+				var $teraPreviewCheckbox = this.sourceEl.closest('form').find('input[name=terapreview]');
+				if ($teraPreviewCheckbox) {
 					var $parentTag = $teraPreviewCheckbox.parent().parent();
 					var teraPreviewDefault = BattleFormats[format] && BattleFormats[format].teraPreviewDefault;
 					if (teraPreviewDefault) {
@@ -1449,24 +1436,12 @@
 					}
 				}
 
-				var $itemClauseCheckbox = $form.find('input[name=itemclause]');
-				if ($itemClauseCheckbox.length) {
-					var $parentTag = $itemClauseCheckbox.parent().parent();
-					var itemClauseDefault = BattleFormats[format] && BattleFormats[format].itemClauseDefault;
-					if (itemClauseDefault) {
-						$parentTag.removeClass('hidden');
-					} else {
-						$parentTag.addClass('hidden');
-						$itemClauseCheckbox.prop('checked', false);
-					}
-				}
-
 				var $partnerLabels = $('label[name=partner]');
 				$partnerLabels.each(function (i, label) {
 					label.style.display = BattleFormats[format].partner ? '' : 'none';
 				});
 			}
-			$form.find('button[name=format]').val(format).html(BattleLog.escapeFormat(format) || '(Select a format)');
+			this.sourceEl.val(format).html(BattleLog.escapeFormat(format) || '(Select a format)');
 
 			this.close();
 		}

@@ -241,7 +241,6 @@ export class BattlePanel extends preact.Component<{ id: string }> {
 	};
 	firstTurn = () => {
 		this.battle?.seekTurn(0);
-		this.forceUpdate();
 	};
 	lastTurn = () => {
 		this.battle?.seekTurn(Infinity);

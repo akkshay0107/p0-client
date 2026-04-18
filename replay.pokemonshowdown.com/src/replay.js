@@ -208,7 +208,7 @@ var ReplayPanel = Panels.StaticPanel.extend({
 		this.battle.skipTurn();
 	},
 	rewind: function() {
-		this.battle.seekBy(-1);
+		this.battle.seekTurn(this.battle.turn - 1);
 	},
 	ffto: function() {
 		var turn = prompt('Turn?');

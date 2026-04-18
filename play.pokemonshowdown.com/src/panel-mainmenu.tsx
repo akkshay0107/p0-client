@@ -25,7 +25,6 @@ export type RoomInfo = {
 
 export class MainMenuRoom extends PSRoom {
 	override readonly classType: string = 'mainmenu';
-	listeners: Record<string, ((response: any) => void)[] | null> = {};
 	userdetailsCache: {
 		[userid: string]: {
 			userid: ID,
@@ -45,7 +44,7 @@ export class MainMenuRoom extends PSRoom {
 	} = {};
 	searchCountdown: { format: string, packedTeam: string, countdown: number, timer: number } | null = null;
 	/** used to track the moment between "search sent" and "server acknowledged search sent" */
-	teamSent: string | null = null;
+	searchSent = false;
 	search: { searching: string[], games: Record<RoomID, string> | null } = { searching: [], games: null };
 	disallowSpectators: boolean | null = PS.prefs.disallowspectators;
 	lastChallenged: number | null = null;
@@ -66,13 +65,10 @@ export class MainMenuRoom extends PSRoom {
 		if (this.disallowSpectators) return '/noreply /hidenext \n';
 		return '';
 	}
-	startSearch = (format: string, team?: Team, parentElem?: HTMLElement | null) => {
+	startSearch = (format: string, team?: Team) => {
 		PS.requestNotifications();
 		if (this.searchCountdown) {
-			PS.alert("Wait for this countdown to finish first...", { parentElem });
-			return;
-		} else if (this.search.searching.includes(format)) {
-			PS.alert(`You're already searching for a ${BattleLog.formatName(format)} battle...`, { parentElem });
+			PS.alert("Wait for this countdown to finish first...");
 			return;
 		}
 		this.searchCountdown = {
@@ -83,10 +79,6 @@ export class MainMenuRoom extends PSRoom {
 		};
 		this.update(null);
 	};
-	searchingFormat() {
-		return this.searchCountdown?.format || this.teamSent ||
-			this.search.searching?.[this.search.searching.length - 1] || null;
-	}
 	cancelSearch = () => {
 		if (this.searchCountdown) {
 			clearTimeout(this.searchCountdown.timer);
@@ -94,8 +86,8 @@ export class MainMenuRoom extends PSRoom {
 			this.update(null);
 			return true;
 		}
-		if (this.teamSent || this.search.searching?.length) {
-			this.teamSent = null;
+		if (this.searchSent || this.search.searching?.length) {
+			this.searchSent = false;
 			PS.send(`/cancelsearch`);
 			this.update(null);
 			return true;
@@ -114,7 +106,7 @@ export class MainMenuRoom extends PSRoom {
 		this.update(null);
 	};
 	doSearch = (search: NonNullable<typeof this.searchCountdown>) => {
-		this.teamSent = search.format;
+		this.searchSent = true;
 		const privacy = this.adjustPrivacy();
 		PS.send(`/utm ${search.packedTeam}`);
 		PS.send(`${privacy}/search ${search.format}`);
@@ -170,14 +162,6 @@ export class MainMenuRoom extends PSRoom {
 			return;
 		} case 'popup': {
 			const [, message] = args;
-			for (const roomid in PS.rooms) {
-				const room = PS.rooms[roomid] as ChatRoom | MainMenuRoom;
-				if (room.teamSent) {
-					room.teamSent = null;
-					room.update(null);
-				}
-				if (room.type === 'team') (room as any).cancelUpload();
-			}
 			PS.alert(message.replace(/\|\|/g, '\n'));
 			return;
 		}
@@ -211,7 +195,7 @@ export class MainMenuRoom extends PSRoom {
 	}
 	receiveSearch(dataBuf: string) {
 		let json;
-		this.teamSent = null;
+		this.searchSent = false;
 		try {
 			json = JSON.parse(dataBuf);
 		} catch {}
@@ -247,9 +231,6 @@ export class MainMenuRoom extends PSRoom {
 				let searchShow = true;
 				let challengeShow = true;
 				let tournamentShow = true;
-				let partner = false;
-				let bestOfDefault = false;
-				let teraPreviewDefault = false;
 				let team: 'preset' | null = null;
 				let teambuilderLevel: number | null = null;
 				let lastCommaIndex = name.lastIndexOf(',');
@@ -261,9 +242,6 @@ export class MainMenuRoom extends PSRoom {
 					if (!(code & 4)) challengeShow = false;
 					if (!(code & 8)) tournamentShow = false;
 					if (code & 16) teambuilderLevel = 50;
-					if (code & 32) partner = true;
-					if (code & 64) bestOfDefault = true;
-					if (code & 128) teraPreviewDefault = true;
 				} else {
 					// Backwards compatibility: late 0.9.0 -> 0.10.0
 					if (name.substr(name.length - 2) === ',#') { // preset teams
@@ -325,11 +303,8 @@ export class MainMenuRoom extends PSRoom {
 					searchShow,
 					challengeShow,
 					tournamentShow,
-					bestOfDefault,
-					teraPreviewDefault,
 					rated: searchShow && id.substr(4, 7) !== 'unrated',
 					teambuilderLevel,
-					partner,
 					teambuilderFormat,
 					isTeambuilderFormat,
 					effectType: 'Format',
@@ -375,29 +350,10 @@ export class MainMenuRoom extends PSRoom {
 		if (message) room.receiveLine([`c`, user1, message]);
 		PS.update();
 	}
-	/**
-	 * Client-to-server query. Handles `/crq` aka `/cmd`.
-	 *
-	 * Most queries are still handled hardcoded, so this is only for certain
-	 * special queries that need a Promise.
-	 */
-	makeQuery(id: string, param?: string) {
-		let fullid = id;
-		if (param) fullid += ` ${toID(param)}`;
-		return new Promise<any>(resolve => {
-			if (!this.listeners[fullid]) {
-				this.listeners[fullid] = [];
-				PS.send(`/cmd ${id} ${param || ''}`);
-			}
-			this.listeners[fullid]!.push(resolve);
-		});
-	}
 	handleQueryResponse(id: ID, response: any) {
-		let fullid: string = id;
 		switch (id) {
 		case 'userdetails':
 			let userid = response.userid;
-			fullid += ` ${userid}`;
 			let userdetails = this.userdetailsCache[userid];
 			if (!userdetails) {
 				this.userdetailsCache[userid] = response;
@@ -472,8 +428,6 @@ export class MainMenuRoom extends PSRoom {
 			}
 			break;
 		}
-		for (const callback of this.listeners[fullid] || []) callback(response);
-		delete this.listeners[fullid];
 	}
 }
 
@@ -485,7 +439,7 @@ class NewsPanel extends PSRoomPanel {
 	change = (ev: Event) => {
 		const target = ev.currentTarget as HTMLInputElement;
 		if (target.value === '1') {
-			document.cookie = "preactalpha=1; expires=Thu, 1 Jun 2026 12:00:00 UTC; path=/";
+			document.cookie = "preactalpha=1; expires=Thu, 1 Oct 2025 12:00:00 UTC; path=/";
 		} else {
 			document.cookie = "preactalpha=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		}
@@ -534,7 +488,7 @@ class MainMenuPanel extends PSRoomPanel<MainMenuRoom> {
 			});
 			return;
 		}
-		PS.mainmenu.startSearch(format, team, ev.target as HTMLElement);
+		PS.mainmenu.startSearch(format, team);
 	};
 	handleDragStart = (e: DragEvent) => {
 		const room = PS.getRoom(e.currentTarget);
@@ -654,8 +608,7 @@ class MainMenuPanel extends PSRoomPanel<MainMenuRoom> {
 		}
 
 		return <TeamForm
-			class="menugroup" format={PS.mainmenu.searchingFormat() || undefined}
-			selectType="search" onSubmit={this.submitSearch}
+			class="menugroup" format={PS.mainmenu.searchCountdown?.format} selectType="search" onSubmit={this.submitSearch}
 		>
 			<p>
 				<button class="button small" data-href="battleoptions" title="Options" aria-label="Options">
@@ -668,7 +621,7 @@ class MainMenuPanel extends PSRoomPanel<MainMenuRoom> {
 					</strong></button>
 					<p class="buttonbar"><button class="button" data-cmd="/cancelsearch">Cancel</button></p>
 				</>
-			) : PS.mainmenu.searchingFormat() ? (
+			) : (PS.mainmenu.searchSent || PS.mainmenu.search.searching.length) ? (
 				<>
 					<button class="mainmenu1 mainmenu big button disabled" type="submit">
 						<strong><i class="fa fa-refresh fa-spin" aria-hidden></i> Searching...</strong>
@@ -744,13 +697,16 @@ export class FormatDropdown extends preact.Component<{
 		this.forceUpdate();
 		if (this.props.onChange) this.props.onChange(e);
 	};
+	override componentWillMount() {
+		if (this.props.format !== undefined) {
+			this.format = this.props.format;
+		}
+	}
 	render() {
-		this.format = this.props.format || this.format || this.props.defaultFormat || '';
+		this.format ||= this.props.format || this.props.defaultFormat || '';
 		let [formatName, customRules] = this.format.split('@@@');
 		if (window.BattleLog) formatName = BattleLog.formatName(formatName);
-		if (this.props.format && !this.props.onChange) {
-			// There's intentionally no `disabled` prop. If this is out of sync
-			// with the `format` and `onChange` props, that's a bug.
+		if (this.props.format || PS.mainmenu.searchSent) {
 			return <button
 				name="format" value={this.format} class="select formatselect preselected" disabled
 			>
@@ -817,48 +773,28 @@ class TeamDropdown extends preact.Component<{ format: string }> {
 export class TeamForm extends preact.Component<{
 	children: preact.ComponentChildren,
 	class?: string, format?: string, teamFormat?: string, hideFormat?: boolean, selectType?: SelectType,
-	defaultFormat?: string,
 	onSubmit: ((e: Event, format: string, team?: Team) => void) | null,
 	onValidate?: ((e: Event, format: string, team?: Team) => void) | null,
 }> {
 	format = '';
-	teraPreview = false;
-	bestOf = false;
 	changeFormat = (ev: Event) => {
 		this.format = (ev.target as HTMLButtonElement).value;
 	};
 	submit = (ev: Event, validate?: 'validate') => {
 		ev.preventDefault();
-		let format = this.format;
-		// in tournaments, format is the custom name & teamFormat is the original format.
-		const teambuilderFormat = this.props.teamFormat || PS.teams.teambuilderFormat(format);
+		const format = this.format;
 		const teamElement = this.base!.querySelector<HTMLButtonElement>('button[name=team]');
 		const teamKey = teamElement!.value;
 		const team = teamKey ? PS.teams.byKey[teamKey] : undefined;
-		if (!window.BattleFormats[teambuilderFormat]?.team && !team) {
+		if (!window.BattleFormats[toID(format)]?.team && !team) {
 			PS.alert('You need to go into the Teambuilder and build a team for this format.', {
 				parentElem: teamElement!,
 			});
 			return;
 		}
-		if (this.teraPreview) {
-			const hasCustomRules = format.includes('@@@');
-			format = `${format}${hasCustomRules ? ', Tera Type Preview' : '@@@ Tera Type Preview'}`;
-		}
-		if (this.bestOf) {
-			const hasCustomRules = format.includes('@@@');
-			const value = this.base?.querySelector<HTMLInputElement>('input[name=bestofvalue]')?.value;
-			format = `${format}${hasCustomRules ? `, Best of = ${value!}` : `@@@ Best of = ${value!}`}`;
-		}
 		PS.teams.loadTeam(team).then(() => {
 			(validate === 'validate' ? this.props.onValidate : this.props.onSubmit)?.(ev, format, team);
 		});
-	};
-	toggleCustomRule = (ev: Event) => {
-		const checked = (ev.target as HTMLInputElement)?.checked;
-		const rule = (ev.target as HTMLInputElement)?.name;
-		if (rule === 'terapreview') this.teraPreview = checked;
-		if (rule === 'bestof') this.bestOf = checked;
 	};
 	handleClick = (ev: Event) => {
 		let target = ev.target as HTMLButtonElement | null;
@@ -871,15 +807,12 @@ export class TeamForm extends preact.Component<{
 		}
 	};
 	render() {
-		const formatId = toID(this.format.split('@@@')[0]);
 		if (window.BattleFormats) {
-			this.format ||= this.props.defaultFormat || '';
+			const starredPrefs = PS.prefs.starredformats || {};
+			// .reverse() because the newest starred format should be the default one
+			const starred = Object.keys(starredPrefs).filter(id => starredPrefs[id] === true).reverse();
 			if (!this.format) {
 				this.format = `gen${Dex.gen}randombattle`;
-
-				const starredPrefs = PS.prefs.starredformats || {};
-				// .reverse() because the newest starred format should be the default one
-				const starred = Object.keys(starredPrefs).filter(id => starredPrefs[id] === true).reverse();
 				for (let id of starred) {
 					let format = window.BattleFormats[id];
 					if (!format) continue;
@@ -891,19 +824,13 @@ export class TeamForm extends preact.Component<{
 				}
 			}
 		}
-		if (this.props.defaultFormat?.startsWith('!!')) {
-			// The !! means that it overrides any current format, and will only be
-			// sent as a prop once
-			this.format = this.props.defaultFormat.slice(2);
-		}
-		if (this.props.format) this.format = this.props.format;
 		return <form class={this.props.class} onSubmit={this.submit} onClick={this.handleClick}>
 			{!this.props.hideFormat && <p>
 				<label class="label">
 					Format:<br />
 					<FormatDropdown
-						selectType={this.props.selectType} format={this.format}
-						onChange={this.props.format ? undefined : this.changeFormat}
+						selectType={this.props.selectType} format={this.props.format} defaultFormat={this.format}
+						onChange={this.changeFormat}
 					/>
 				</label>
 			</p>}
@@ -913,19 +840,6 @@ export class TeamForm extends preact.Component<{
 					<TeamDropdown format={this.props.teamFormat || this.format} />
 				</label>
 			</p>
-			{this.props.selectType === 'challenge' &&
-				window.BattleFormats[formatId]?.teraPreviewDefault && <p>
-				<label class="checkbox">
-					<input type="checkbox" name="terapreview" onChange={this.toggleCustomRule} />
-					<abbr title="Start a battle with Tera Type Preview">Tera Type Preview</abbr></label></p>}
-			{this.props.selectType === 'challenge' &&
-				window.BattleFormats[formatId]?.bestOfDefault && <p>
-				<label class="checkbox"><input type="checkbox" name="bestof" onChange={this.toggleCustomRule} />
-					<abbr title="Start a team-locked best-of-n series">
-						Best-of-<input
-							name="bestofvalue" type="number" min="3" max="9" step="2" value="3" style="width: 28px; vertical-align: initial;"
-						/>
-					</abbr></label></p>}
 			<p>{this.props.children}</p>
 		</form>;
 	}
