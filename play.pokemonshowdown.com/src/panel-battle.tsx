@@ -976,7 +976,15 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		if (Config.researchMode) {
 			return <div class="controls">
 				<p>
-					<button class="button" data-cmd="/close" style="width: 100%; padding: 12px; font-size: 12pt;">
+					<span style="float: right">
+						<a
+							onClick={this.handleDownloadReplay}
+							href={`//${Config.routes.replays}/download`}
+							class="button replayDownloadButton"
+						>
+							<i class="fa fa-download" aria-hidden></i> Download replay</a>
+					</span>
+					<button class="button" data-cmd="/close" style="width: 70%; padding: 12px; font-size: 12pt;">
 						<strong>Return to Teams</strong>
 					</button>
 				</p>

@@ -73,7 +73,7 @@ PS.user.changeName('TestPlayer');
 }
 
 PS.send("/utm "+team.packedTeam);
-PS.send("/challenge FuzzyBot, gen9vgc2025regh");
+PS.send("/challenge Bot, gen9vgc2025regh");
 };return _this;}_inheritsLoose(ResearchLandingPage,_preact$Component);var _proto=ResearchLandingPage.prototype;_proto.componentDidMount=function componentDidMount(){var _this2=this;document.body.classList.add('research-mode');for(var roomid in PS.rooms){if(roomid&&!roomid.startsWith('battle-')){var room=PS.rooms[roomid];if(room){room.minimized=true;if(roomid==='rooms'||roomid==='lobby'){PS.hideRightRoom();}}}}this.psSubscription=PS.subscribe(function(){if(_this2.state.isWaiting&&Object.keys(PS.rooms).some(function(id){return id.startsWith('battle-');})){_this2.setState({isWaiting:false});}});if(PS.user.userid!=='testplayer'){PS.user.changeName('TestPlayer');}PS.update();};_proto.componentWillUnmount=function componentWillUnmount(){document.body.classList.remove('research-mode');if(this.psSubscription){this.psSubscription.unsubscribe();this.psSubscription=null;}};_proto.
 
 render=function render(){var _this3=this;
@@ -86,7 +86,7 @@ isWaiting?
 preact.h("div",{"class":"research-waiting"},
 preact.h("div",{"class":"spinner"}),
 preact.h("h1",null,"Preparing Match..."),
-preact.h("p",null,"Challenging ",preact.h("strong",null,"FuzzyBot")," with your selected team."),
+preact.h("p",null,"Challenging ",preact.h("strong",null,"Bot")," with your selected team."),
 preact.h("button",{"class":"button",style:"margin-top: 20px",onClick:function(){return _this3.setState({isWaiting:false});}},"Cancel")
 ):
 
@@ -152,10 +152,14 @@ onClick:onClick,
 onDblClick:onDblClick},
 
 preact.h("div",{"class":"team-name"},team.name),
+preact.h("div",{"class":"team-right-content"},
 preact.h("div",{"class":"team-icons"},
 this.icons
 ),
-isSelected&&preact.h("div",{"class":"selection-indicator"},preact.h("i",{"class":"fa fa-check-circle"}))
+preact.h("div",{"class":"selection-indicator"},
+isSelected&&preact.h("i",{"class":"fa fa-check-circle"})
+)
+)
 ));
 
 };return ResearchTeamCard;}(preact.Component);

@@ -108,6 +108,12 @@
     text-transform: capitalize;
 }
 
+.team-right-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+}
+
 .research-team-card .team-icons {
     display: flex;
     gap: 8px;
@@ -121,6 +127,17 @@
 .selection-indicator {
     color: #000000;
     font-size: 14pt;
+    width: 0 !important;
+    margin-left: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.research-team-card.selected .selection-indicator {
+    width: 24px !important;
+    margin-left: 16px !important;
 }
 
 .research-footer {

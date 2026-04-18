@@ -73,7 +73,7 @@ export class ResearchLandingPage extends preact.Component {
 		}
 
 		PS.send(`/utm ${team.packedTeam}`);
-		PS.send(`/challenge FuzzyBot, gen9vgc2025regh`);
+		PS.send(`/challenge Bot, gen9vgc2025regh`);
 	};
 
 	override render() {
@@ -86,7 +86,7 @@ export class ResearchLandingPage extends preact.Component {
 					<div class="research-waiting">
 						<div class="spinner"></div>
 						<h1>Preparing Match...</h1>
-						<p>Challenging <strong>FuzzyBot</strong> with your selected team.</p>
+						<p>Challenging <strong>Bot</strong> with your selected team.</p>
 						<button class="button" style="margin-top: 20px" onClick={() => this.setState({ isWaiting: false })}>Cancel</button>
 					</div>
 				) : (
@@ -152,10 +152,14 @@ class ResearchTeamCard extends preact.Component<{
 				onDblClick={onDblClick}
 			>
 				<div class="team-name">{team.name}</div>
-				<div class="team-icons">
-					{this.icons}
+				<div class="team-right-content">
+					<div class="team-icons">
+						{this.icons}
+					</div>
+					<div class="selection-indicator">
+						{isSelected && <i class="fa fa-check-circle"></i>}
+					</div>
 				</div>
-				{isSelected && <div class="selection-indicator"><i class="fa fa-check-circle"></i></div>}
 			</div>
 		);
 	}
