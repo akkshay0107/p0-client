@@ -176,6 +176,55 @@
     cursor: not-allowed !important;
 }
 
+.research-login-form {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.research-login-form .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.research-login-form label {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.research-login-form input {
+    background: #ffffff !important;
+    border: 1.5px solid #e5e5e5 !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    font-size: 13pt !important;
+    color: #000000 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.research-login-form input:focus {
+    border-color: #000000 !important;
+    outline: none !important;
+}
+
+.login-error {
+    background: #fff0f0;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 11pt;
+    text-align: center;
+    border: 1px solid #ffcccc;
+}
+
 .ps-room.battle,
 .ps-room.battle * {
     background: initial !important;

@@ -9,6 +9,7 @@ export class ResearchLandingPage extends preact.Component {
 		isWaiting: false,
 	};
 	psSubscription: any = null;
+	userSubscription: any = null;
 
 	override componentDidMount() {
 		document.body.classList.add('research-mode');
@@ -31,10 +32,9 @@ export class ResearchLandingPage extends preact.Component {
 			}
 		});
 
-		// Set default username for research mode
-		if (PS.user.userid !== 'testplayer') {
-			PS.user.changeName('TestPlayer');
-		}
+		this.userSubscription = PS.user.subscribe(() => {
+			this.forceUpdate();
+		});
 
 		PS.update();
 	}
@@ -44,6 +44,10 @@ export class ResearchLandingPage extends preact.Component {
 		if (this.psSubscription) {
 			this.psSubscription.unsubscribe();
 			this.psSubscription = null;
+		}
+		if (this.userSubscription) {
+			this.userSubscription.unsubscribe();
+			this.userSubscription = null;
 		}
 	}
 
@@ -67,11 +71,6 @@ export class ResearchLandingPage extends preact.Component {
 		
 		this.setState({ isWaiting: true });
 
-		// Ensure we have the correct username before challenging
-		if (PS.user.userid !== 'testplayer') {
-			PS.user.changeName('TestPlayer');
-		}
-
 		PS.send(`/utm ${team.packedTeam}`);
 		PS.send(`/challenge Bot, gen9vgc2025regh`);
 	};
@@ -79,6 +78,10 @@ export class ResearchLandingPage extends preact.Component {
 	override render() {
 		const teams = Config.researchTeams || [];
 		const { isWaiting, selectedTeamIndex } = this.state;
+
+		if (!PS.user.registered) {
+			return <ResearchLoginPage />;
+		}
 
 		return (
 			<div class="research-landing">
@@ -93,7 +96,7 @@ export class ResearchLandingPage extends preact.Component {
 					<>
 						<div class="research-header">
 							<h1>VGC Research Project</h1>
-							<p>Please select a team to challenge the RL bot. Double-click to view the PokéPaste.</p>
+							<p>Welcome, <strong>{PS.user.name}</strong>. Please select a team to challenge the RL bot.</p>
 						</div>
 						<div class="research-team-list">
 							{teams.map((team, index) => (
@@ -117,6 +120,68 @@ export class ResearchLandingPage extends preact.Component {
 						</div>
 					</>
 				)}
+			</div>
+		);
+	}
+}
+
+class ResearchLoginPage extends preact.Component {
+	state = {
+		username: '',
+		password: '',
+		loading: false,
+	};
+
+	handleLogin = (e: Event) => {
+		e.preventDefault();
+		const { username, password } = this.state;
+		if (!username || !password) return;
+
+		this.setState({ loading: true });
+		PS.user.changeNameWithPassword(username, password);
+	};
+
+	override render() {
+		const { username, password, loading } = this.state;
+		const error = PS.user.state?.error;
+
+		return (
+			<div class="research-landing">
+				<div class="research-header">
+					<h1>VGC Research Project</h1>
+					<p>Please log in with your participant credentials to continue.</p>
+				</div>
+				<form class="research-login-form" onSubmit={this.handleLogin}>
+					<div class="input-group">
+						<label>Username</label>
+						<input 
+							type="text" 
+							value={username} 
+							onInput={e => this.setState({ username: (e.target as HTMLInputElement).value })}
+							disabled={loading}
+							autoFocus
+						/>
+					</div>
+					<div class="input-group">
+						<label>Password</label>
+						<input 
+							type="password" 
+							value={password} 
+							onInput={e => this.setState({ password: (e.target as HTMLInputElement).value })}
+							disabled={loading}
+						/>
+					</div>
+					{error && <div class="login-error">{error}</div>}
+					<div class="research-footer">
+						<button 
+							type="submit"
+							class={`button big ${(!username || !password || loading) ? 'disabled' : ''}`}
+							disabled={!username || !password || loading}
+						>
+							<strong>{loading ? 'Logging in...' : 'Login'}</strong>
+						</button>
+					</div>
+				</form>
 			</div>
 		);
 	}
