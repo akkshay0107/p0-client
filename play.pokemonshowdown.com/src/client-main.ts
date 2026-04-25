@@ -1830,6 +1830,7 @@ export const PS = new class extends PSModel {
 		"ladder-*": "*",
 		"view-*": "*",
 		"login": "*semimodal-popup",
+		"research-settings": "*semimodal-popup",
 		"help-*": "chat",
 	});
 	/** List of rooms on the left side of the top tabbar */

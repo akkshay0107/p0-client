@@ -2,6 +2,7 @@ import preact from "../js/lib/preact";
 import { Config, PS, PSRoom, type RoomID } from "./client-main";
 import { PSIcon, PSPanelWrapper, PSRoomPanel } from "./panels";
 import { Teams } from "./battle-teams";
+import { PSLoginServer } from "./client-connection";
 
 export class ResearchLandingPage extends preact.Component {
 	state = {
@@ -68,11 +69,15 @@ export class ResearchLandingPage extends preact.Component {
 		if (selectedTeamIndex === -1) return;
 
 		const team = Config.researchTeams![selectedTeamIndex];
-		
+
 		this.setState({ isWaiting: true });
 
 		PS.send(`/utm ${team.packedTeam}`);
 		PS.send(`/challenge Bot, gen9vgc2025regh`);
+	};
+
+	openSettings = () => {
+		PS.join('research-settings' as RoomID);
 	};
 
 	override render() {
@@ -85,6 +90,13 @@ export class ResearchLandingPage extends preact.Component {
 
 		return (
 			<div class="research-landing">
+				<button 
+					class="button settings-button" 
+					onClick={this.openSettings}
+					title="Settings"
+				>
+					<i class="fa fa-cog"></i>
+				</button>
 				{isWaiting ? (
 					<div class="research-waiting">
 						<div class="spinner"></div>
@@ -121,6 +133,175 @@ export class ResearchLandingPage extends preact.Component {
 					</>
 				)}
 			</div>
+		);
+	}
+}
+
+export class ResearchSettingsPanel extends PSRoomPanel {
+	static readonly id = 'research-settings';
+	static readonly routes = ['research-settings'];
+
+	state = {
+		newUsername: PS.user.name || '',
+		currentPassword: '',
+		newPassword: '',
+		confirmPassword: '',
+		loading: false,
+		error: '',
+		success: '',
+	};
+
+	handleChangeUsername = (e: Event) => {
+		e.preventDefault();
+		const { newUsername, currentPassword } = this.state;
+		if (!newUsername || !currentPassword) return;
+
+		this.setState({ loading: true, error: '', success: '' });
+
+		PSLoginServer.query('changeusername', {
+			name: PS.user.name,
+			pass: currentPassword,
+			newname: newUsername
+		}).then(res => {
+			this.setState({ loading: false });
+			if (res?.actionsuccess) {
+				this.setState({ success: 'Username updated successfully!', currentPassword: '' });
+				PS.user.updateLogin({ name: res.newusername });
+			} else {
+				this.setState({ error: res?.actionerror || 'Failed to update username' });
+			}
+		});
+	};
+
+	handleChangePassword = (e: Event) => {
+		e.preventDefault();
+		const { currentPassword, newPassword, confirmPassword } = this.state;
+		if (!currentPassword || !newPassword || !confirmPassword) return;
+
+		if (newPassword !== confirmPassword) {
+			this.setState({ error: 'New passwords do not match' });
+			return;
+		}
+
+		this.setState({ loading: true, error: '', success: '' });
+
+		PSLoginServer.query('changepassword', {
+			name: PS.user.name,
+			pass: currentPassword,
+			newpass: newPassword
+		}).then(res => {
+			this.setState({ loading: false });
+			if (res?.actionsuccess) {
+				this.setState({ 
+					success: 'Password updated successfully!', 
+					currentPassword: '', 
+					newPassword: '', 
+					confirmPassword: '' 
+				});
+			} else {
+				this.setState({ error: res?.actionerror || 'Failed to update password' });
+			}
+		});
+	};
+
+	override render() {
+		const { newUsername, currentPassword, newPassword, confirmPassword, loading, error, success } = this.state;
+
+		return (
+			<PSPanelWrapper room={this.props.room} width={400} scrollable={true}>
+				<div class="research-settings-panel" style="padding: 20px">
+					<div class="research-header" style="margin-bottom: 20px">
+						<h2 style="margin: 0">Account Settings</h2>
+						<p style="font-size: 11pt">Modify your participant profile</p>
+					</div>
+
+					{error && <div class="login-error" style="margin-bottom: 15px">{error}</div>}
+					{success && <div class="login-success" style="margin-bottom: 15px; color: green; text-align: center; background: #e6ffed; padding: 10px; border-radius: 8px; border: 1px solid #b7eb8f;">{success}</div>}
+
+					<div class="settings-section">
+						<h3>Change Username</h3>
+						<form class="research-login-form" onSubmit={this.handleChangeUsername}>
+							<div class="input-group">
+								<label>New Username</label>
+								<input 
+									type="text" 
+									value={newUsername}
+									onInput={e => this.setState({ newUsername: (e.target as HTMLInputElement).value })}
+									disabled={loading}
+								/>
+							</div>
+							<div class="input-group">
+								<label>Current Password</label>
+								<input 
+									type="password" 
+									value={currentPassword}
+									onInput={e => this.setState({ currentPassword: (e.target as HTMLInputElement).value })}
+									disabled={loading}
+								/>
+							</div>
+							<div class="research-footer" style="margin-top: 10px">
+								<button 
+									type="submit" 
+									class={`button ${loading ? 'disabled' : ''}`}
+									style="width: 100%; padding: 10px; background: #000; color: #fff; border-radius: 5px;"
+									disabled={loading || !newUsername || !currentPassword}
+								>
+									Update Username
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee" />
+
+					<div class="settings-section">
+						<h3>Change Password</h3>
+						<form class="research-login-form" onSubmit={this.handleChangePassword}>
+							<div class="input-group">
+								<label>Current Password</label>
+								<input 
+									type="password" 
+									value={currentPassword}
+									onInput={e => this.setState({ currentPassword: (e.target as HTMLInputElement).value })}
+									disabled={loading}
+								/>
+							</div>
+							<div class="input-group">
+								<label>New Password</label>
+								<input 
+									type="password" 
+									value={newPassword}
+									onInput={e => this.setState({ newPassword: (e.target as HTMLInputElement).value })}
+									disabled={loading}
+								/>
+							</div>
+							<div class="input-group">
+								<label>Confirm New Password</label>
+								<input 
+									type="password" 
+									value={confirmPassword}
+									onInput={e => this.setState({ confirmPassword: (e.target as HTMLInputElement).value })}
+									disabled={loading}
+								/>
+							</div>
+							<div class="research-footer" style="margin-top: 10px">
+								<button 
+									type="submit" 
+									class={`button ${loading ? 'disabled' : ''}`}
+									style="width: 100%; padding: 10px; background: #000; color: #fff; border-radius: 5px;"
+									disabled={loading || !currentPassword || !newPassword || !confirmPassword}
+								>
+									Update Password
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<div style="margin-top: 30px; text-align: center">
+						<button class="button" style="padding: 10px 20px" onClick={() => this.close()}>Close</button>
+					</div>
+				</div>
+			</PSPanelWrapper>
 		);
 	}
 }
@@ -229,3 +410,5 @@ class ResearchTeamCard extends preact.Component<{
 		);
 	}
 }
+
+PS.addRoomType(ResearchSettingsPanel);

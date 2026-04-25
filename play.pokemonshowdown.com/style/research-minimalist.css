@@ -269,3 +269,31 @@ body.research-mode {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.settings-button {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    color: #666 !important;
+    transition: color 0.2s ease !important;
+    padding: 10px !important;
+}
+
+.settings-button:hover {
+    color: #000 !important;
+}
+
+.settings-section h3 {
+    font-size: 14pt;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.research-settings-panel {
+    background: #fff;
+    border-radius: 12px;
+}
