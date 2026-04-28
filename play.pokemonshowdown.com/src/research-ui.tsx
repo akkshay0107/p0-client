@@ -212,7 +212,7 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 
 		return (
 			<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 10000;" onClick={(e) => e.target === e.currentTarget && this.props.onClose()}>
-				<div class="research-settings-panel" style="padding: 30px; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto;" onClick={e => e.stopPropagation()}>
+				<div class="research-settings-panel" style="padding: 30px; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;" onClick={e => e.stopPropagation()}>
 					<div class="research-header" style="margin-bottom: 25px; text-align: left; display: flex; justify-content: space-between; align-items: flex-start;">
 						<div>
 							<h2 style="margin: 0; font-size: 20pt; font-weight: 800; color: #000;">Account Settings</h2>
@@ -234,7 +234,7 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 									value={newUsername} 
 									onInput={e => this.setState({ newUsername: (e.target as HTMLInputElement).value })}
 									disabled={loading}
-									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"
+									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"
 								/>
 							</div>
 							<div class="input-group" style="margin-bottom: 15px">
@@ -244,14 +244,14 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 									value={this.state.currentPasswordForUsername}
 									onInput={e => this.setState({ currentPasswordForUsername: (e.target as HTMLInputElement).value })}
 									disabled={loading}
-									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"
+									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"
 								/>
 							</div>
 							<div class="research-footer" style="margin-top: 10px">
 								<button 
 									type="submit" 
 									class={`button ${loading || !newUsername || !this.state.currentPasswordForUsername ? 'disabled' : ''}`}
-									style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
+									style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; box-sizing: border-box;"
 									disabled={loading || !newUsername || !this.state.currentPasswordForUsername}
 								>
 									{loading ? 'Updating...' : 'Update Username'}
@@ -271,7 +271,7 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 									value={this.state.currentPasswordForPassword}
 									onInput={e => this.setState({ currentPasswordForPassword: (e.target as HTMLInputElement).value })}
 									disabled={loading}
-									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"
+									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"
 								/>
 							</div>
 							<div class="input-group" style="margin-bottom: 15px">
@@ -281,7 +281,7 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 									value={newPassword} 
 									onInput={e => this.setState({ newPassword: (e.target as HTMLInputElement).value })}
 									disabled={loading}
-									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"
+									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"
 								/>
 							</div>
 							<div class="input-group" style="margin-bottom: 15px">
@@ -291,14 +291,14 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 									value={confirmPassword} 
 									onInput={e => this.setState({ confirmPassword: (e.target as HTMLInputElement).value })}
 									disabled={loading}
-									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"
+									style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"
 								/>
 							</div>
 							<div class="research-footer" style="margin-top: 10px">
 								<button 
 									type="submit" 
 									class={`button ${loading || !this.state.currentPasswordForPassword || !newPassword || !confirmPassword ? 'disabled' : ''}`}
-									style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
+									style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; box-sizing: border-box;"
 									disabled={loading || !this.state.currentPasswordForPassword || !newPassword || !confirmPassword}
 								>
 									{loading ? 'Updating...' : 'Update Password'}

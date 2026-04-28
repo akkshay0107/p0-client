@@ -297,3 +297,8 @@ body.research-mode {
     background: #fff;
     border-radius: 12px;
 }
+
+.research-settings-panel .research-login-form,
+.research-settings-panel .research-footer {
+    max-width: none !important;
+}

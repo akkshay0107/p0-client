@@ -212,7 +212,7 @@ var _this$state2=this.state,newUsername=_this$state2.newUsername,newPassword=_th
 
 return(
 preact.h("div",{style:"position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 10000;",onClick:function(e){return e.target===e.currentTarget&&_this5.props.onClose();}},
-preact.h("div",{"class":"research-settings-panel",style:"padding: 30px; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto;",onClick:function(e){return e.stopPropagation();}},
+preact.h("div",{"class":"research-settings-panel",style:"padding: 30px; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;",onClick:function(e){return e.stopPropagation();}},
 preact.h("div",{"class":"research-header",style:"margin-bottom: 25px; text-align: left; display: flex; justify-content: space-between; align-items: flex-start;"},
 preact.h("div",null,
 preact.h("h2",{style:"margin: 0; font-size: 20pt; font-weight: 800; color: #000;"},"Account Settings"),
@@ -234,7 +234,7 @@ type:"text",
 value:newUsername,
 onInput:function(e){return _this5.setState({newUsername:e.target.value});},
 disabled:loading,
-style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"}
+style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"}
 )
 ),
 preact.h("div",{"class":"input-group",style:"margin-bottom: 15px"},
@@ -244,14 +244,14 @@ type:"password",
 value:this.state.currentPasswordForUsername,
 onInput:function(e){return _this5.setState({currentPasswordForUsername:e.target.value});},
 disabled:loading,
-style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"}
+style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"}
 )
 ),
 preact.h("div",{"class":"research-footer",style:"margin-top: 10px"},
 preact.h("button",{
 type:"submit",
 "class":"button "+(loading||!newUsername||!this.state.currentPasswordForUsername?'disabled':''),
-style:"width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;",
+style:"width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; box-sizing: border-box;",
 disabled:loading||!newUsername||!this.state.currentPasswordForUsername},
 
 loading?'Updating...':'Update Username'
@@ -271,7 +271,7 @@ type:"password",
 value:this.state.currentPasswordForPassword,
 onInput:function(e){return _this5.setState({currentPasswordForPassword:e.target.value});},
 disabled:loading,
-style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"}
+style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"}
 )
 ),
 preact.h("div",{"class":"input-group",style:"margin-bottom: 15px"},
@@ -281,7 +281,7 @@ type:"password",
 value:newPassword,
 onInput:function(e){return _this5.setState({newPassword:e.target.value});},
 disabled:loading,
-style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"}
+style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"}
 )
 ),
 preact.h("div",{"class":"input-group",style:"margin-bottom: 15px"},
@@ -291,14 +291,14 @@ type:"password",
 value:confirmPassword,
 onInput:function(e){return _this5.setState({confirmPassword:e.target.value});},
 disabled:loading,
-style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt;"}
+style:"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12pt; box-sizing: border-box;"}
 )
 ),
 preact.h("div",{"class":"research-footer",style:"margin-top: 10px"},
 preact.h("button",{
 type:"submit",
 "class":"button "+(loading||!this.state.currentPasswordForPassword||!newPassword||!confirmPassword?'disabled':''),
-style:"width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;",
+style:"width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; box-sizing: border-box;",
 disabled:loading||!this.state.currentPasswordForPassword||!newPassword||!confirmPassword},
 
 loading?'Updating...':'Update Password'
