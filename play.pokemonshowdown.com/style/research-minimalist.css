@@ -1,9 +1,62 @@
-.research-mode, 
-.research-mode body,
-.research-mode #ps-frame {
-    background: #ffffff !important;
-    background-image: none !important;
-    color: #000000 !important;
+:root {
+    --p0-bg-dark: #0a0e1a;
+    --p0-bg-card: #111827;
+    --p0-bg-card-hover: #1f2937;
+    --p0-accent-red: #e3350d;
+    --p0-accent-blue: #2563eb;
+    --p0-accent-cyan: #00d4ff;
+    --p0-text-primary: #f8fafc;
+    --p0-text-secondary: #94a3b8;
+    --p0-border: rgba(37, 99, 235, 0.2);
+    --p0-glow: 0 0 20px rgba(37, 99, 235, 0.15);
+    --p0-font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.research-mode {
+    font-family: var(--p0-font) !important;
+}
+
+/* Global Research Theme - Apply to body and containers */
+body.research-mode,
+.research-mode .research-container,
+.research-mode .research-login-container {
+    background: var(--p0-bg-dark) !important;
+    background-image: radial-gradient(circle at 50% 50%, #111827 0%, #0a0e1a 100%) !important;
+    color: var(--p0-text-primary) !important;
+}
+
+/* Revert to default Showdown look when a battle is active */
+body.research-mode.battle-active,
+.research-mode.battle-active #ps-frame {
+    background: #def3ff !important;
+    background-image: linear-gradient(#def3ff, #fff) !important;
+    color: #333 !important;
+}
+
+/* Specific container sizing */
+.research-mode .research-container,
+.research-mode .research-login-container {
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+.research-mode.battle-active::before {
+    display: none !important;
+}
+
+/* Animated background shift - only for non-battle screens */
+body.research-mode:not(.battle-active)::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(227, 53, 13, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .research-mode .header,
@@ -28,7 +81,7 @@
     right: 0 !important;
     bottom: 0 !important;
     border: none !important;
-    background: #ffffff !important;
+    background: transparent !important;
 }
 
 .research-mode .ps-room-wrapper.left-panel {
@@ -37,96 +90,170 @@
 }
 
 .research-landing {
-    background: #ffffff !important;
-    color: #000000 !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    padding: 0 !important;
+    background: transparent !important;
+    color: var(--p0-text-primary) !important;
+    font-family: var(--p0-font) !important;
+    padding: 20px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     min-height: 100vh !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.research-info-card,
+.research-team-select-page {
+    background: rgba(17, 24, 39, 0.7) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--p0-border) !important;
+    border-radius: 24px !important;
+    padding: 40px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    width: 100% !important;
+    max-width: 800px !important;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.p0-logo {
+    font-size: 32pt;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    color: var(--p0-text-primary);
+}
+
+.p0-logo span {
+    background: linear-gradient(to right, var(--p0-accent-blue), var(--p0-accent-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .research-header {
-    text-align: center;
-    margin-bottom: 40px;
-    max-width: 800px;
+    margin-bottom: 30px;
 }
 
 .research-header h1 {
-    font-size: 32pt;
+    font-size: 28pt;
     font-weight: 800;
-    margin-bottom: 15px;
-    letter-spacing: -1.5px;
-    color: #000000;
+    margin: 0 0 10px 0;
+    background: linear-gradient(to right, var(--p0-accent-blue), var(--p0-accent-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .research-header p {
-    font-size: 14pt;
-    color: #444444;
+    color: var(--p0-text-secondary);
+    font-size: 13pt;
     line-height: 1.6;
 }
 
-.research-team-list {
+.info-steps {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.step-number {
+    background: var(--p0-accent-red);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(227, 53, 13, 0.4);
+}
+
+.step-text h3 {
+    margin: 0 0 5px 0;
+    font-size: 12pt;
+    color: var(--p0-text-primary);
+}
+
+.step-text p {
+    margin: 0;
+    font-size: 10pt;
+    color: var(--p0-text-secondary);
+}
+
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
     width: 100%;
-    max-width: 600px;
+    margin: 20px 0;
 }
 
 .research-team-card {
-    background: #ffffff !important;
-    border: 1.5px solid #e5e5e5 !important;
-    border-radius: 8px !important;
-    padding: 16px 24px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
     cursor: pointer !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
 }
 
 .research-team-card:hover {
-    border-color: #000000 !important;
-    background: #f9f9f9 !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(227, 53, 13, 0.3) !important;
+    transform: translateY(-2px);
 }
 
 .research-team-card.selected {
-    border-color: #000000 !important;
-    border-width: 2px !important;
-    background: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    background: rgba(227, 53, 13, 0.1) !important;
+    border-color: var(--p0-accent-red) !important;
+    box-shadow: 0 0 20px rgba(227, 53, 13, 0.1);
 }
 
-.research-team-card .team-name {
-    font-size: 16pt !important;
-    font-weight: 600 !important;
-    color: #000000 !important;
-    text-transform: capitalize;
+.team-name {
+    font-weight: 600;
+    font-size: 12pt;
+    color: var(--p0-text-primary);
 }
 
 .team-right-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .research-team-card .team-icons {
     display: flex;
     gap: 8px;
-    opacity: 0.8;
 }
 
 .research-team-card .picon {
     transform: scale(0.9);
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.1));
 }
 
 .selection-indicator {
-    color: #000000;
-    font-size: 14pt;
+    color: var(--p0-accent-blue);
+    font-size: 16pt;
     width: 0 !important;
     margin-left: 0 !important;
     overflow: hidden !important;
@@ -146,159 +273,191 @@
     max-width: 600px;
 }
 
-.research-footer .button.big {
-    background: #000000 !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 20px 0 !important;
-    font-size: 15pt !important;
-    font-weight: 700 !important;
+/* Consistent Button Styling - Only for Main Research UI */
+.research-mode .nav-button,
+.research-mode .research-footer .button {
+    background: rgba(17, 24, 39, 0.8) !important;
+    border: 1px solid var(--p0-border) !important;
+    color: var(--p0-text-primary) !important;
+    border-radius: 12px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    font-family: var(--p0-font) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
     cursor: pointer !important;
+    text-shadow: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+}
+
+.research-mode .nav-button:hover,
+.research-mode .research-footer .button:hover {
+    background: var(--p0-bg-card-hover) !important;
+    border-color: var(--p0-accent-red) !important;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.15), 0 0 20px rgba(227, 53, 13, 0.15) !important;
+    transform: translateY(-2px) !important;
+    color: #fff !important;
+}
+
+.research-mode .research-footer .button.big {
+    padding: 18px 32px !important;
+    font-size: 14pt !important;
+    font-weight: 800 !important;
     width: 100% !important;
-    transition: all 0.2s ease !important;
-    letter-spacing: 0.5px;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    background: rgba(17, 24, 39, 0.9) !important;
+    border-width: 2px !important;
 }
 
-.research-footer .button.big:hover:not(.disabled) {
-    background: #333333 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.research-mode .research-footer .button.big:hover {
+    border-color: var(--p0-accent-blue) !important;
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.25) !important;
 }
 
-.research-footer .button.big:active:not(.disabled) {
-    transform: translateY(0);
-}
-
-.research-footer .button.big.disabled {
-    background: #f0f0f0 !important;
-    color: #aaaaaa !important;
+.research-mode .button.disabled {
+    opacity: 0.5 !important;
     cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--p0-bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+}
+
+/* Login Form Styles */
 .research-login-form {
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--p0-border);
+    border-radius: 24px;
+    padding: 40px;
     width: 100%;
     max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.research-login-form .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.input-group {
+    margin-bottom: 20px;
 }
 
-.research-login-form label {
-    font-size: 11pt;
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 10pt;
     font-weight: 600;
-    color: #666666;
+    color: var(--p0-text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
-.research-login-form input {
-    background: #ffffff !important;
-    border: 1.5px solid #e5e5e5 !important;
-    border-radius: 8px !important;
-    padding: 12px 16px !important;
-    font-size: 13pt !important;
-    color: #000000 !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    transition: border-color 0.2s ease !important;
+.input-group input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #fff;
+    font-size: 12pt;
+    font-family: var(--p0-font);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
-.research-login-form input:focus {
-    border-color: #000000 !important;
-    outline: none !important;
+.input-group input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--p0-accent-blue);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 .login-error {
-    background: #fff0f0;
-    color: #cc0000;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
     padding: 12px;
-    border-radius: 8px;
-    font-size: 11pt;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 10pt;
     text-align: center;
-    border: 1px solid #ffcccc;
 }
 
-.ps-room.battle,
-.ps-room.battle * {
-    background: initial !important;
-    color: initial !important;
-    font-family: initial !important;
-}
-
-.research-mode .ps-room.battle {
-    top: 0 !important;
-}
-
-body.research-mode {
-    background-image: none !important;
-    background-color: #ffffff !important;
-}
-
+/* Waiting State */
 .research-waiting {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     text-align: center;
-    animation: researchFadeIn 0.3s ease-out;
-}
-
-@keyframes researchFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    padding: 40px;
 }
 
 .spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #000000;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(37, 99, 235, 0.1);
+    border-top-color: var(--p0-accent-blue);
     border-radius: 50%;
+    margin: 0 auto 25px;
     animation: spin 1s linear infinite;
-    margin-bottom: 25px;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to { transform: rotate(360deg); }
 }
 
-.settings-button {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    background: transparent !important;
-    border: none !important;
-    font-size: 24px !important;
-    cursor: pointer !important;
-    color: #666 !important;
-    transition: color 0.2s ease !important;
-    padding: 10px !important;
+/* Nav Buttons */
+.nav-button {
+    position: fixed;
+    top: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--p0-border);
+    color: var(--p0-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 100;
 }
 
-.settings-button:hover {
-    color: #000 !important;
+.nav-button:hover {
+    color: var(--p0-accent-red);
+    border-color: var(--p0-accent-red);
+    background: rgba(17, 24, 39, 0.9);
 }
 
-.settings-section h3 {
-    font-size: 14pt;
-    margin-bottom: 15px;
-    color: #333;
+.info-button { left: 20px; }
+.settings-button { right: 20px; }
+
+/* Settings Modal */
+.modal-backdrop {
+    background: rgba(0, 0, 0, 0.8) !important;
 }
 
 .research-settings-panel {
-    background: #fff;
-    border-radius: 12px;
+    background: #111827 !important;
+    border: 1px solid var(--p0-border) !important;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1) !important;
 }
 
-.research-settings-panel .research-login-form,
-.research-settings-panel .research-footer {
-    max-width: none !important;
+.settings-section h3 {
+    color: var(--p0-text-primary);
+    border-bottom: 1px solid var(--p0-border);
 }

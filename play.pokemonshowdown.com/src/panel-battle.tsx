@@ -973,23 +973,9 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 	renderAfterBattleControls() {
 		const room = this.props.room;
 
-		if (Config.researchMode) {
-			return <div class="controls">
-				<p>
-					<span style="float: right">
-						<a
-							onClick={this.handleDownloadReplay}
-							href={`//${Config.routes.replays}/download`}
-							class="button replayDownloadButton"
-						>
-							<i class="fa fa-download" aria-hidden></i> Download replay</a>
-					</span>
-					<button class="button" data-cmd="/close" style="width: 70%; padding: 12px; font-size: 12pt;">
-						<strong>Return to Teams</strong>
-					</button>
-				</p>
-			</div>;
-		}
+
+
+
 
 		const isNotTiny = room.width > 700;
 		return <div class="controls">
@@ -1003,9 +989,9 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 						<i class="fa fa-download" aria-hidden></i> Download replay</a>
 					<br />
 					<br />
-					<button class="button" data-cmd="/savereplay">
+					{!Config.researchMode && <button class="button" data-cmd="/savereplay">
 						<i class="fa fa-upload" aria-hidden></i> Upload and share replay
-					</button>
+					</button>}
 				</span>
 
 				<button class="button" data-cmd="/play" style="min-width:4.5em">
@@ -1023,9 +1009,9 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 					<button class="button" data-cmd="/close">
 						<strong>Main menu</strong><br /><small>(closes this battle)</small>
 					</button> {}
-					<button class="button" data-cmd={`/closeand /challenge ${room.battle.farSide.id},${room.battle.tier}`}>
+					{!Config.researchMode && <button class="button" data-cmd={`/closeand /challenge ${room.battle.farSide.id},${room.battle.tier}`}>
 						<strong>Rematch</strong><br /><small>(closes this battle)</small>
-					</button>
+					</button>}
 				</p>
 			) : (
 				<p>
