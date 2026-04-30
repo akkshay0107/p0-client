@@ -1,16 +1,22 @@
-Pokémon Showdown Client
+# p0-client (Pokémon Showdown Client)
 ========================================================================
 
-Navigation: [Website][1] | [Server repository][2] | **Client repository** | [Dex repository][3]
+This is the client component for the **p0** project. It is a fork of the Pokémon Showdown client tailored for the VGC research environment.
 
-  [1]: http://pokemonshowdown.com/
-  [2]: https://github.com/Zarel/Pokemon-Showdown
-  [3]: https://github.com/Zarel/Pokemon-Showdown-Dex
+<div align="center">
+
+**[Website][1]** &nbsp;•&nbsp; **[p0 repository][2]** &nbsp;•&nbsp; **Client repository** &nbsp;•&nbsp; **[p0-infra repository][3]**
+
+[1]: (Coming soon)
+[2]: https://github.com/akkshay0107/p0
+[3]: https://github.com/akkshay0107/p0-infra
+
+</div>
 
 Introduction
 ------------------------------------------------------------------------
 
-This is a repository for most of the client code for Pokémon Showdown.
+This is a repository for most of the client code for Pokémon Showdown, used within the p0 environment.
 
 This is what runs `play.pokemonshowdown.com`.
 

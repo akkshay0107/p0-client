@@ -6,7 +6,7 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zarel/Pokemon-Showdown-Client.git"
+    "url": "https://github.com/akkshay0107/p0-client.git"
   },
   "scripts": {
     "lint": "eslint --cache --cache-location caches/eslintcache.json",
