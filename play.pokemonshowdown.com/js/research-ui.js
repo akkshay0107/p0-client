@@ -156,54 +156,91 @@ onBattle:this.handleBattle}
 
 ResearchInfoPage=function(_preact$Component2){function ResearchInfoPage(){return _preact$Component2.apply(this,arguments)||this;}_inheritsLoose(ResearchInfoPage,_preact$Component2);var _proto2=ResearchInfoPage.prototype;_proto2.
 render=function render(){
+var logoUrl="p0-logo.png";
+
 return(
-preact.h("div",{"class":"research-landing"},
-preact.h("div",{"class":"research-info-card"},
-preact.h("div",{"class":"p0-logo"},
-preact.h("span",null,"P0")," PROJECT"
+preact.h("div",{"class":"dark bg-[#11131b] text-on-surface font-body-md h-screen w-full flex flex-col items-center p-md relative overflow-hidden"},
+preact.h("div",{"class":"w-full max-w-4xl z-10 flex flex-col h-full justify-center"},
+
+preact.h("div",{"class":"text-center mb-6"},
+preact.h("div",{"class":"flex justify-center items-center w-full mb-3"},
+preact.h("img",{src:logoUrl,alt:"P0 Logo","class":"h-16 object-contain"})
 ),
-preact.h("div",{"class":"research-header"},
-preact.h("h1",null,"Welcome to P0"),
-preact.h("p",null,"An RL-trained VGC battle bot experiment. Please read the instructions below carefully.")
+preact.h("p",{"class":"max-w-2xl mx-auto font-body-md text-body-md text-on-surface-variant opacity-80"},"An RL-trained VGC battle bot experiment. Please read carefully."
+
+)
 ),
 
-preact.h("div",{"class":"info-steps"},
-preact.h("div",{"class":"step"},
-preact.h("div",{"class":"step-number"},"1"),
-preact.h("div",{"class":"step-text"},
-preact.h("h3",null,"Pick a Team"),
-preact.h("p",null,"Choose from 6 pre-built VGC teams. The bot will also select from its own pool of trained teams.")
-)
+
+preact.h("div",{"class":"flex flex-col gap-4 mb-10 max-w-2xl mx-auto w-full"},
+
+preact.h("div",{"class":"bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30"},
+preact.h("div",{"class":"flex items-center gap-4"},
+preact.h("div",{"class":"flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg"},
+preact.h("span",{"class":"font-bold text-primary-container text-base"},"01")
 ),
-preact.h("div",{"class":"step"},
-preact.h("div",{"class":"step-number"},"2"),
-preact.h("div",{"class":"step-text"},
-preact.h("h3",null,"Start Battle"),
-preact.h("p",null,"Click \"Challenge Bot\" to begin. Ensure you're ready before starting the match.")
-)
-),
-preact.h("div",{"class":"step"},
-preact.h("div",{"class":"step-number"},"3"),
-preact.h("div",{"class":"step-text"},
-preact.h("h3",null,"Team Preview"),
-preact.h("p",null,"You MUST click \"Open Team Sheet\" during Team Preview to trigger the bot's selection logic.")
-)
-),
-preact.h("div",{"class":"step"},
-preact.h("div",{"class":"step-number"},"4"),
-preact.h("div",{"class":"step-text"},
-preact.h("h3",null,"Play to End"),
-preact.h("p",null,"Forfeiting is disabled for research integrity. Please play every match through to completion.")
+preact.h("div",{"class":"flex flex-col"},
+preact.h("h3",{"class":"font-bold text-on-surface text-lg"},"Pick a Team"),
+preact.h("p",{"class":"text-sm text-on-surface-variant"},"Choose from 6 pre-built teams. The bot will pick from its own pool.")
 )
 )
 ),
 
-preact.h("div",{"class":"research-footer"},
-preact.h("button",{"class":"button big",onClick:this.props.onContinue},"Continue to Team Selection \u2192"
 
+preact.h("div",{"class":"bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30"},
+preact.h("div",{"class":"flex items-center gap-4"},
+preact.h("div",{"class":"flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg"},
+preact.h("span",{"class":"font-bold text-primary-container text-base"},"02")
+),
+preact.h("div",{"class":"flex flex-col"},
+preact.h("h3",{"class":"font-bold text-on-surface text-lg"},"Start Battle"),
+preact.h("p",{"class":"text-sm text-on-surface-variant"},"Click \"Challenge Bot\" to begin. Ensure you're ready.")
+)
+)
+),
+
+
+preact.h("div",{"class":"bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30"},
+preact.h("div",{"class":"flex items-center gap-4"},
+preact.h("div",{"class":"flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg"},
+preact.h("span",{"class":"font-bold text-primary-container text-base"},"03")
+),
+preact.h("div",{"class":"flex flex-col"},
+preact.h("h3",{"class":"font-bold text-primary-container text-lg"},"Team Preview"),
+preact.h("p",{"class":"text-sm text-on-surface-variant"},"You ",preact.h("span",{"class":"text-primary-container font-bold"},"MUST")," click \"Open Team Sheet\" during Team Preview.")
+)
+)
+),
+
+
+preact.h("div",{"class":"bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30"},
+preact.h("div",{"class":"flex items-center gap-4"},
+preact.h("div",{"class":"flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg"},
+preact.h("span",{"class":"font-bold text-primary-container text-base"},"04")
+),
+preact.h("div",{"class":"flex flex-col"},
+preact.h("h3",{"class":"font-bold text-on-surface text-lg"},"Play to End"),
+preact.h("p",{"class":"text-sm text-on-surface-variant"},"Forfeiting is disabled. Please play every match to completion.")
 )
 )
 )
+),
+
+
+preact.h("div",{"class":"flex flex-col items-center"},
+preact.h("button",{
+"class":"bg-primary-container text-on-primary-container font-bold px-8 py-3 rounded-lg shadow-[0_8px_24px_rgba(255,203,5,0.2)] active:scale-95 transition-all hover:brightness-110 flex items-center gap-2 text-md",
+onClick:this.props.onContinue},
+"CONTINUE TO TEAM SELECTION",
+
+preact.h("span",{"class":"material-symbols-outlined"},"arrow_forward")
+)
+)
+),
+
+
+preact.h("div",{"class":"fixed -bottom-20 -right-20 w-80 h-80 bg-primary-container/5 rounded-full blur-[100px] pointer-events-none -z-10"}),
+preact.h("div",{"class":"fixed -top-20 -left-20 w-80 h-80 bg-secondary-container/5 rounded-full blur-[100px] pointer-events-none -z-10"})
 ));
 
 };return ResearchInfoPage;}(preact.Component);var
@@ -437,44 +474,90 @@ PS.user.changeNameWithPassword(username,password);
 render=function render(){var _PS$user$state,_this7=this;
 var _this$state3=this.state,username=_this$state3.username,password=_this$state3.password,loading=_this$state3.loading;
 var error=(_PS$user$state=PS.user.state)==null?void 0:_PS$user$state.error;
+var logoUrl="p0-logo.png";
 
 return(
-preact.h("div",{"class":"research-landing"},
-preact.h("div",{"class":"research-header"},
-preact.h("h1",null,"P0"),
-preact.h("p",null,"Please log in with your participant credentials to continue.")
+preact.h("div",{"class":"dark bg-background text-on-background font-body-md min-h-full flex flex-col items-center justify-center p-md",style:"background-color: #11131b; color: #e2e1ee; min-height: 100vh;"},
+
+preact.h("header",{"class":"flex justify-center items-center w-full mb-8"},
+preact.h("img",{src:logoUrl,alt:"P0 Logo","class":"h-20 object-contain"})
 ),
-preact.h("form",{"class":"research-login-form",onSubmit:this.handleLogin},
-preact.h("div",{"class":"input-group"},
-preact.h("label",null,"Username"),
+
+preact.h("section",{"class":"relative w-full max-w-[440px] bg-surface-container border border-outline-variant p-lg rounded-xl shadow-2xl z-10",style:"background-color: #1d1f28; border-color: #4e4632; border-width: 1px; border-radius: 12px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);"},
+preact.h("div",{"class":"absolute top-4 right-4"},
+preact.h("span",{"class":"px-2 py-0.5 rounded text-[10px] font-bold bg-error-container/20 border border-error-container/30 text-error uppercase tracking-widest",style:"color: #ffb4ab; background-color: rgba(147, 0, 10, 0.2); border: 1px solid rgba(147, 0, 10, 0.3);"},"Alpha"
+
+)
+),
+
+preact.h("div",{"class":"mb-xl text-center",style:"margin-bottom: 40px;"},
+preact.h("h2",{"class":"font-headline-md text-headline-md text-on-surface mb-xs",style:"font-family: 'Spline Sans'; font-size: 24px; color: #e2e1ee;"},"Play against P0"),
+preact.h("p",{"class":"font-body-sm text-body-sm text-on-surface-variant",style:"font-family: 'Manrope'; font-size: 14px; color: #d2c5ab;"},"Enter participant details to continue")
+),
+
+preact.h("form",{"class":"space-y-md",onSubmit:this.handleLogin},
+error&&preact.h("p",{"class":"text-error text-center mb-4",style:"color: #ffb4ab;"},error),
+
+preact.h("div",{"class":"space-y-xs",style:"margin-bottom: 24px;"},
+preact.h("label",{"class":"font-label-caps text-label-caps text-on-surface-variant uppercase",style:"font-family: 'Manrope'; font-size: 12px; color: #d2c5ab; display: block; margin-bottom: 4px;"},"Username"),
+preact.h("div",{"class":"relative"},
+preact.h("span",{"class":"material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]",style:"position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d2c5ab;"},"person"),
 preact.h("input",{
+"class":"w-full bg-surface-container-low border border-outline-variant rounded-lg py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all placeholder:text-on-surface-variant/40",
+style:"width: 100%; background-color: #191b24; border: 1px solid #4e4632; border-radius: 8px; padding: 12px 12px 12px 48px; color: #e2e1ee;",
+placeholder:"Enter your username",
 type:"text",
 value:username,
 onInput:function(e){return _this7.setState({username:e.target.value});},
 disabled:loading,
 autoFocus:true}
 )
+)
 ),
-preact.h("div",{"class":"input-group"},
-preact.h("label",null,"Password"),
+
+
+preact.h("div",{"class":"space-y-xs",style:"margin-bottom: 24px;"},
+preact.h("label",{"class":"font-label-caps text-label-caps text-on-surface-variant uppercase",style:"font-family: 'Manrope'; font-size: 12px; color: #d2c5ab; display: block; margin-bottom: 4px;"},"Password"),
+preact.h("div",{"class":"relative"},
+preact.h("span",{"class":"material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]",style:"position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d2c5ab;"},"lock"),
 preact.h("input",{
+"class":"w-full bg-surface-container-low border border-outline-variant rounded-lg py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all placeholder:text-on-surface-variant/40",
+style:"width: 100%; background-color: #191b24; border: 1px solid #4e4632; border-radius: 8px; padding: 12px 12px 12px 48px; color: #e2e1ee;",
+placeholder:"\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
 type:"password",
 value:password,
 onInput:function(e){return _this7.setState({password:e.target.value});},
 disabled:loading}
 )
+)
 ),
-error&&preact.h("div",{"class":"login-error"},error),
-preact.h("div",{"class":"research-footer"},
+
+
 preact.h("button",{
+"class":"w-full bg-primary-container text-on-primary font-bold py-4 rounded-lg hover:brightness-110 active:scale-95 transition-all glow-hover flex items-center justify-center gap-2 mt-4 "+(!username||!password||loading?'opacity-50 cursor-not-allowed':''),
+style:"width: 100%; background-color: #ffcb05; color: #3d2f00; font-weight: 700; padding: 16px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; "+(!username||!password||loading?'opacity: 0.5; cursor: not-allowed;':''),
 type:"submit",
-"class":"button big "+(!username||!password||loading?'disabled':''),
 disabled:!username||!password||loading},
 
-preact.h("strong",null,loading?'Logging in...':'Login')
+loading?'Logging in...':'Login',
+!loading&&preact.h("span",{"class":"material-symbols-outlined text-[20px]"},"arrow_forward")
+)
+),
+
+
+preact.h("div",{"class":"mt-xl pt-md border-t border-outline-variant/30",style:"margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(78, 70, 50, 0.3);"},
+preact.h("div",{"class":"flex items-start gap-3 p-sm bg-secondary-container/10 border border-secondary-container/20 rounded-lg",style:"display: flex; align-items: flex-start; gap: 12px; padding: 12px; background-color: rgba(38, 56, 184, 0.1); border: 1px solid rgba(38, 56, 184, 0.2); border-radius: 8px;"},
+preact.h("span",{"class":"material-symbols-outlined text-secondary text-[18px]",style:"color: #bcc2ff;"},"info"),
+preact.h("p",{"class":"font-body-sm text-body-sm text-on-secondary-container",style:"font-family: 'Manrope'; font-size: 14px; color: #aab3ff; margin: 0;"},"Contact ",
+preact.h("a",{"class":"text-secondary font-bold hover:underline decoration-2 underline-offset-4",style:"color: #bcc2ff; font-weight: 700; text-decoration: none;",href:"mailto:akkshaysr0107@gmail.com"},"akkshaysr0107@gmail.com")," for an ID"
 )
 )
 )
+),
+
+
+preact.h("div",{"class":"fixed -bottom-20 -right-20 w-80 h-80 bg-primary-container/5 rounded-full blur-[100px] pointer-events-none -z-10",style:"position: fixed; bottom: -80px; right: -80px; width: 320px; height: 320px; background-color: rgba(255, 203, 5, 0.05); border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -10;"}),
+preact.h("div",{"class":"fixed -top-20 -left-20 w-80 h-80 bg-secondary-container/5 rounded-full blur-[100px] pointer-events-none -z-10",style:"position: fixed; top: -80px; left: -80px; width: 320px; height: 320px; background-color: rgba(38, 56, 184, 0.05); border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -10;"})
 ));
 
 };return ResearchLoginPage;}(preact.Component);var
