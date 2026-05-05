@@ -4,6 +4,19 @@ import { PSIcon, PSPanelWrapper, PSRoomPanel } from "./panels";
 import { Teams } from "./battle-teams";
 import { PSLoginServer } from "./client-connection";
 
+/**
+ * Modern Electric Design System Tokens
+ * Colors:
+ * - Primary (Yellow): #ffcb05
+ * - Secondary (Blue): #3B4CCA
+ * - Background (Dark): #11131b
+ * - Surface (Navy): #1d1f28
+ * - Surface Muted: #161B26
+ * - Border: #4e4632
+ * - Text Primary: #e2e1ee
+ * - Text Secondary: #d2c5ab
+ */
+
 export class ResearchLandingPage extends preact.Component {
 	state = {
 		currentPage: 'login' as 'login' | 'info' | 'teamselect',
@@ -116,30 +129,35 @@ export class ResearchLandingPage extends preact.Component {
 		}
 
 		return (
-			<div class="research-landing">
+			<div class="research-landing dark bg-[#11131b] min-h-screen w-full relative overflow-hidden text-[#e2e1ee] font-['Manrope']">
 				<button 
-					class="nav-button info-button" 
+					class="fixed top-6 left-6 w-12 h-12 rounded-lg bg-[#1d1f28] border border-[#4e4632] text-[#d2c5ab] flex items-center justify-center hover:text-[#ffcb05] hover:border-[#ffcb05] transition-all z-[100] shadow-lg"
 					onClick={() => this.setState({ currentPage: 'info' })}
 					title="Information"
 				>
-					<i class="fa fa-info-circle"></i>
+					<span class="material-symbols-outlined">info</span>
 				</button>
 				<button 
-					class="nav-button settings-button" 
+					class="fixed top-6 right-6 w-12 h-12 rounded-lg bg-[#1d1f28] border border-[#4e4632] text-[#d2c5ab] flex items-center justify-center hover:text-[#ffcb05] hover:border-[#ffcb05] transition-all z-[100] shadow-lg"
 					onClick={this.openSettings}
 					title="Settings"
 				>
-					<i class="fa fa-cog"></i>
+					<span class="material-symbols-outlined">settings</span>
 				</button>
 				{showSettings && (
 					<ResearchSettingsModal onClose={() => this.setState({ showSettings: false })} />
 				)}
 				{isWaiting ? (
-					<div class="research-waiting">
-						<div class="spinner"></div>
-						<h1 style="color: var(--p0-accent-blue)">Preparing Match...</h1>
-						<p>Challenging <strong>Bot</strong> with your selected team.</p>
-						<button class="button" style="margin-top: 20px; background: transparent; border: 1px solid var(--p0-border); color: var(--p0-text-secondary); padding: 8px 16px; border-radius: 8px;" onClick={() => this.setState({ isWaiting: false })}>Cancel</button>
+					<div class="flex flex-col items-center justify-center h-screen w-full bg-[#11131b] text-[#e2e1ee]">
+						<div class="w-16 h-16 border-4 border-[#ffcb05]/20 border-t-[#ffcb05] rounded-full animate-spin mb-8"></div>
+						<h1 class="text-3xl font-bold text-[#ffcb05] mb-2 font-['Spline_Sans']">Preparing Match...</h1>
+						<p class="text-[#d2c5ab]">Challenging <strong>Bot</strong> with your selected team.</p>
+						<button 
+							class="mt-8 px-6 py-2 rounded-lg border border-[#4e4632] text-[#d2c5ab] hover:bg-[#1d1f28] transition-all"
+							onClick={() => this.setState({ isWaiting: false })}
+						>
+							Cancel
+						</button>
 					</div>
 				) : (
 					<ResearchTeamSelectPage 
@@ -149,6 +167,10 @@ export class ResearchLandingPage extends preact.Component {
 						onBattle={this.handleBattle}
 					/>
 				)}
+
+				{/* Background Decoration */}
+				<div class="fixed -bottom-20 -right-20 w-80 h-80 bg-[#ffcb05]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+				<div class="fixed -top-20 -left-20 w-80 h-80 bg-[#3B4CCA]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
 			</div>
 		);
 	}
@@ -159,77 +181,44 @@ class ResearchInfoPage extends preact.Component<{ onContinue: () => void }> {
 		const logoUrl = "p0-logo.png";
 
 		return (
-			<div class="dark bg-[#11131b] text-on-surface font-body-md h-screen w-full flex flex-col items-center p-md relative overflow-hidden">
+			<div class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] h-screen w-full flex flex-col items-center p-md relative overflow-hidden">
 				<div class="w-full max-w-4xl z-10 flex flex-col h-full justify-center">
 					{/* Hero Branding Section */}
-					<div class="text-center mb-6">
-						<div class="flex justify-center items-center w-full mb-3">
-							<img src={logoUrl} alt="P0 Logo" class="h-16 object-contain" />
+					<div class="text-center mb-8">
+						<div class="flex justify-center items-center w-full mb-6">
+							<img src={logoUrl} alt="P0 Logo" class="h-28 object-contain" />
 						</div>
-						<p class="max-w-2xl mx-auto font-body-md text-body-md text-on-surface-variant opacity-80">
+						<p class="max-w-2xl mx-auto font-['Manrope'] text-lg text-[#d2c5ab] opacity-80">
 							An RL-trained VGC battle bot experiment. Please read carefully.
 						</p>
 					</div>
 
-					{/* Instructions - Vertical stack to save horizontal space and keep it visible */}
+					{/* Instructions - Vertical stack */}
 					<div class="flex flex-col gap-4 mb-10 max-w-2xl mx-auto w-full">
-						{/* Step 1 */}
-						<div class="bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30">
-							<div class="flex items-center gap-4">
-								<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg">
-									<span class="font-bold text-primary-container text-base">01</span>
-								</div>
-								<div class="flex flex-col">
-									<h3 class="font-bold text-on-surface text-lg">Pick a Team</h3>
-									<p class="text-sm text-on-surface-variant">Choose from 6 pre-built teams. The bot will pick from its own pool.</p>
-								</div>
-							</div>
-						</div>
-
-						{/* Step 2 */}
-						<div class="bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30">
-							<div class="flex items-center gap-4">
-								<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg">
-									<span class="font-bold text-primary-container text-base">02</span>
-								</div>
-								<div class="flex flex-col">
-									<h3 class="font-bold text-on-surface text-lg">Start Battle</h3>
-									<p class="text-sm text-on-surface-variant">Click "Challenge Bot" to begin. Ensure you're ready.</p>
+						{[
+							{ id: '01', title: 'Pick a Team', desc: 'Choose from 6 pre-built teams. The bot will pick from its own pool.' },
+							{ id: '02', title: 'Start Battle', desc: 'Click "Challenge Bot" to begin. Ensure you\'re ready.' },
+							{ id: '03', title: 'Team Preview', desc: 'You MUST click "Open Team Sheet" during Team Preview.' },
+							{ id: '04', title: 'Play to End', desc: 'Forfeiting is disabled. Please play every match to completion.' }
+						].map(step => (
+							<div class="bg-[#161B26] border border-[#222938] p-5 rounded-lg transition-all hover:border-[#ffcb05]/30">
+								<div class="flex items-center gap-4">
+									<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-[#1d1f28] border border-[#222938] rounded-lg">
+										<span class="font-bold text-[#ffcb05] text-base">{step.id}</span>
+									</div>
+									<div class="flex flex-col">
+										<h3 class={`font-bold text-lg ${step.id === '03' ? 'text-[#ffcb05]' : 'text-[#e2e1ee]'}`}>{step.title}</h3>
+										<p class="text-sm text-[#d2c5ab]">{step.desc}</p>
+									</div>
 								</div>
 							</div>
-						</div>
-
-						{/* Step 3 */}
-						<div class="bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30">
-							<div class="flex items-center gap-4">
-								<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg">
-									<span class="font-bold text-primary-container text-base">03</span>
-								</div>
-								<div class="flex flex-col">
-									<h3 class="font-bold text-primary-container text-lg">Team Preview</h3>
-									<p class="text-sm text-on-surface-variant">You <span class="text-primary-container font-bold">MUST</span> click "Open Team Sheet" during Team Preview.</p>
-								</div>
-							</div>
-						</div>
-
-						{/* Step 4 */}
-						<div class="bg-[#161B26] border border-[#222938] p-5 rounded-lg electric-glow transition-all hover:border-primary-container/30">
-							<div class="flex items-center gap-4">
-								<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-surface-container-low border border-[#222938] rounded-lg">
-									<span class="font-bold text-primary-container text-base">04</span>
-								</div>
-								<div class="flex flex-col">
-									<h3 class="font-bold text-on-surface text-lg">Play to End</h3>
-									<p class="text-sm text-on-surface-variant">Forfeiting is disabled. Please play every match to completion.</p>
-								</div>
-							</div>
-						</div>
+						))}
 					</div>
 
 					{/* Action Footer */}
 					<div class="flex flex-col items-center">
 						<button 
-							class="bg-primary-container text-on-primary-container font-bold px-8 py-3 rounded-lg shadow-[0_8px_24px_rgba(255,203,5,0.2)] active:scale-95 transition-all hover:brightness-110 flex items-center gap-2 text-md"
+							class="bg-[#ffcb05] text-[#3d2f00] font-bold px-8 py-3 rounded-lg shadow-[0_8px_24px_rgba(255,203,5,0.2)] active:scale-95 transition-all hover:brightness-110 flex items-center gap-2 text-md"
 							onClick={this.props.onContinue}
 						>
 							CONTINUE TO TEAM SELECTION 
@@ -239,8 +228,8 @@ class ResearchInfoPage extends preact.Component<{ onContinue: () => void }> {
 				</div>
 
 				{/* Background Decoration */}
-				<div class="fixed -bottom-20 -right-20 w-80 h-80 bg-primary-container/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
-				<div class="fixed -top-20 -left-20 w-80 h-80 bg-secondary-container/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+				<div class="fixed -bottom-20 -right-20 w-80 h-80 bg-[#ffcb05]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+				<div class="fixed -top-20 -left-20 w-80 h-80 bg-[#3B4CCA]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
 			</div>
 		);
 	}
@@ -255,14 +244,23 @@ class ResearchTeamSelectPage extends preact.Component<{
 	override render() {
 		const teams = Config.researchTeams || [];
 		const { selectedTeamIndex, onSelect, onDblClick, onBattle } = this.props;
+		const logoUrl = "p0-logo.png";
 
 		return (
-			<>
-				<div class="research-header">
-					<h1>Select Your Team</h1>
-					<p>Welcome, <strong>{PS.user.name}</strong>. Pick a team to challenge the bot.</p>
+			<div class="w-full max-w-4xl mx-auto flex flex-col h-screen p-md relative z-10 font-['Manrope'] text-[#e2e1ee]">
+				{/* Top Logo */}
+				<header class="flex justify-center items-center w-full mb-12 mt-10">
+					<img src={logoUrl} alt="P0 Logo" class="h-28 object-contain" />
+				</header>
+
+				<div class="text-center mb-10">
+					<h1 class="font-['Spline_Sans'] font-bold text-3xl mb-xs">Select Your Team</h1>
+					<p class="text-base text-[#d2c5ab]">
+						Pick a team to challenge the bot.
+					</p>
 				</div>
-				<div class="research-team-list">
+
+				<div class="flex flex-col gap-3 mb-6 overflow-y-auto pr-2 custom-scrollbar max-w-3xl mx-auto w-full">
 					{teams.map((team, index) => (
 						<ResearchTeamCard
 							key={index}
@@ -273,16 +271,19 @@ class ResearchTeamSelectPage extends preact.Component<{
 						/>
 					))}
 				</div>
-				<div class="research-footer">
+
+				<div class="flex flex-col items-center mt-auto pb-8">
 					<button 
-						class={`button big ${selectedTeamIndex === -1 ? 'disabled' : ''}`}
+						class={`bg-[#ffcb05] text-[#3d2f00] font-bold px-12 py-3.5 rounded-lg shadow-[0_8px_24px_rgba(255,203,5,0.2)] active:scale-95 transition-all hover:brightness-110 flex items-center gap-2 text-md ${selectedTeamIndex === -1 ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
 						disabled={selectedTeamIndex === -1}
 						onClick={onBattle}
 					>
-						<strong>Challenge Bot!</strong>
+						CHALLENGE BOT
+						<span class="material-symbols-outlined">bolt</span>
 					</button>
+					<p class="mt-3 text-[10px] text-[#d2c5ab] opacity-60 uppercase tracking-[0.2em] font-bold">Double-click a team to view Poképaste</p>
 				</div>
-			</>
+			</div>
 		);
 	}
 }
@@ -358,95 +359,100 @@ export class ResearchSettingsModal extends preact.Component<{ onClose: () => voi
 		const { newUsername, newPassword, confirmPassword, loading, error, success } = this.state;
 
 		return (
-			<div class="modal-backdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 10000;" onClick={(e) => e.target === e.currentTarget && this.props.onClose()}>
-				<div class="research-settings-panel" style="padding: 30px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;" onClick={e => e.stopPropagation()}>
-					<div class="research-header" style="margin-bottom: 25px; text-align: left; display: flex; justify-content: space-between; align-items: flex-start;">
+			<div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000] font-['Manrope']" onClick={(e) => e.target === e.currentTarget && this.props.onClose()}>
+				<div class="bg-[#11131b] border border-[#4e4632] p-8 rounded-2xl shadow-2xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto custom-scrollbar text-[#e2e1ee]" onClick={e => e.stopPropagation()}>
+					<div class="flex justify-between items-start mb-8">
 						<div>
-							<h2 style="margin: 0; font-size: 20pt; font-weight: 800; color: var(--p0-accent-red);">Account Settings</h2>
-							<p style="margin: 5px 0 0; color: var(--p0-text-secondary); font-size: 11pt;">Manage your participant profile</p>
+							<h2 class="text-2xl font-bold font-['Spline_Sans']">Account Settings</h2>
+							<p class="text-sm text-[#d2c5ab]">Manage your participant profile</p>
 						</div>
-						<button onClick={this.props.onClose} style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--p0-text-secondary);">&times;</button>
+						<button onClick={this.props.onClose} class="text-[#d2c5ab] hover:text-[#ffcb05] transition-colors">
+							<span class="material-symbols-outlined text-2xl">close</span>
+						</button>
 					</div>
 
-					{error && <div class="login-error" style="margin-bottom: 20px;">{error}</div>}
-					{success && <div style="background: rgba(227, 53, 13, 0.1); color: var(--p0-accent-red); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(227, 53, 13, 0.2);">{success}</div>}
+					{error && <div class="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-6 text-sm text-center">{error}</div>}
+					{success && <div class="bg-[#ffcb05]/10 border border-[#ffcb05]/20 text-[#ffcb05] p-4 rounded-lg mb-6 text-sm text-center">{success}</div>}
 
-					<div class="settings-section" style="margin-bottom: 30px">
-						<h3>Change Username</h3>
-						<form onSubmit={this.handleChangeUsername} class="research-login-form" style="background: transparent; border: none; padding: 0; backdrop-filter: none; max-width: none;">
-							<div class="input-group" style="margin-bottom: 15px">
-								<label>New Username</label>
-								<input 
-									type="text" 
-									value={newUsername} 
-									onInput={e => this.setState({ newUsername: (e.target as HTMLInputElement).value })}
-									disabled={loading}
-								/>
-							</div>
-							<div class="input-group" style="margin-bottom: 15px">
-								<label>Current Password</label>
-								<input 
-									type="password" 
-									value={this.state.currentPasswordForUsername}
-									onInput={e => this.setState({ currentPasswordForUsername: (e.target as HTMLInputElement).value })}
-									disabled={loading}
-								/>
-							</div>
-							<div class="research-footer" style="margin-top: 10px; max-width: none;">
+					<div class="space-y-8">
+						{/* Change Username */}
+						<section>
+							<h3 class="text-xs font-bold text-[#d2c5ab] uppercase tracking-widest mb-4">Change Username</h3>
+							<form onSubmit={this.handleChangeUsername} class="space-y-4">
+								<div class="space-y-1">
+									<label class="text-[10px] font-bold text-[#d2c5ab]/60 uppercase tracking-widest">New Username</label>
+									<input 
+										class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg p-3 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all"
+										type="text" 
+										value={newUsername} 
+										onInput={e => this.setState({ newUsername: (e.target as HTMLInputElement).value })}
+										disabled={loading}
+									/>
+								</div>
+								<div class="space-y-1">
+									<label class="text-[10px] font-bold text-[#d2c5ab]/60 uppercase tracking-widest">Current Password</label>
+									<input 
+										class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg p-3 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all"
+										type="password" 
+										value={this.state.currentPasswordForUsername}
+										onInput={e => this.setState({ currentPasswordForUsername: (e.target as HTMLInputElement).value })}
+										disabled={loading}
+									/>
+								</div>
 								<button 
 									type="submit" 
-									class={`button big ${loading || !newUsername || !this.state.currentPasswordForUsername ? 'disabled' : ''}`}
-									style="padding: 12px; font-size: 12pt;"
+									class={`w-full bg-[#ffcb05] text-[#3d2f00] font-bold py-3 rounded-lg hover:brightness-110 active:scale-95 transition-all ${loading || !newUsername || !this.state.currentPasswordForUsername ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
 									disabled={loading || !newUsername || !this.state.currentPasswordForUsername}
 								>
 									{loading ? 'Updating...' : 'Update Username'}
 								</button>
-								<p style="font-size: 9pt; color: var(--p0-text-secondary); margin-top: 8px; text-align: center;">Note: This will log you out and require re-login.</p>
-							</div>
-						</form>
-					</div>
+								<p class="text-[10px] text-[#d2c5ab]/40 text-center">Note: This will log you out and require re-login.</p>
+							</form>
+						</section>
 
-					<div class="settings-section">
-						<h3>Change Password</h3>
-						<form onSubmit={this.handleChangePassword} class="research-login-form" style="background: transparent; border: none; padding: 0; backdrop-filter: none; max-width: none;">
-							<div class="input-group" style="margin-bottom: 15px">
-								<label>Current Password</label>
-								<input 
-									type="password" 
-									value={this.state.currentPasswordForPassword}
-									onInput={e => this.setState({ currentPasswordForPassword: (e.target as HTMLInputElement).value })}
-									disabled={loading}
-								/>
-							</div>
-							<div class="input-group" style="margin-bottom: 15px">
-								<label>New Password</label>
-								<input 
-									type="password" 
-									value={newPassword} 
-									onInput={e => this.setState({ newPassword: (e.target as HTMLInputElement).value })}
-									disabled={loading}
-								/>
-							</div>
-							<div class="input-group" style="margin-bottom: 15px">
-								<label>Confirm New Password</label>
-								<input 
-									type="password" 
-									value={confirmPassword} 
-									onInput={e => this.setState({ confirmPassword: (e.target as HTMLInputElement).value })}
-									disabled={loading}
-								/>
-							</div>
-							<div class="research-footer" style="margin-top: 10px; max-width: none;">
+						{/* Change Password */}
+						<section>
+							<h3 class="text-xs font-bold text-[#d2c5ab] uppercase tracking-widest mb-4">Change Password</h3>
+							<form onSubmit={this.handleChangePassword} class="space-y-4">
+								<div class="space-y-1">
+									<label class="text-[10px] font-bold text-[#d2c5ab]/60 uppercase tracking-widest">Current Password</label>
+									<input 
+										class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg p-3 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all"
+										type="password" 
+										value={this.state.currentPasswordForPassword}
+										onInput={e => this.setState({ currentPasswordForPassword: (e.target as HTMLInputElement).value })}
+										disabled={loading}
+									/>
+								</div>
+								<div class="space-y-1">
+									<label class="text-[10px] font-bold text-[#d2c5ab]/60 uppercase tracking-widest">New Password</label>
+									<input 
+										class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg p-3 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all"
+										type="password" 
+										value={newPassword} 
+										onInput={e => this.setState({ newPassword: (e.target as HTMLInputElement).value })}
+										disabled={loading}
+									/>
+								</div>
+								<div class="space-y-1">
+									<label class="text-[10px] font-bold text-[#d2c5ab]/60 uppercase tracking-widest">Confirm New Password</label>
+									<input 
+										class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg p-3 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all"
+										type="password" 
+										value={confirmPassword} 
+										onInput={e => this.setState({ confirmPassword: (e.target as HTMLInputElement).value })}
+										disabled={loading}
+									/>
+								</div>
 								<button 
 									type="submit" 
-									class={`button big ${loading || !this.state.currentPasswordForPassword || !newPassword || !confirmPassword ? 'disabled' : ''}`}
-									style="padding: 12px; font-size: 12pt;"
+									class={`w-full bg-[#ffcb05] text-[#3d2f00] font-bold py-3 rounded-lg hover:brightness-110 active:scale-95 transition-all ${loading || !this.state.currentPasswordForPassword || !newPassword || !confirmPassword ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
 									disabled={loading || !this.state.currentPasswordForPassword || !newPassword || !confirmPassword}
 								>
 									{loading ? 'Updating...' : 'Update Password'}
 								</button>
-							</div>
-						</form>
+							</form>
+						</section>
 					</div>
 				</div>
 			</div>
@@ -477,34 +483,33 @@ class ResearchLoginPage extends preact.Component {
 		const logoUrl = "p0-logo.png";
 
 		return (
-			<div class="dark bg-background text-on-background font-body-md min-h-full flex flex-col items-center justify-center p-md" style="background-color: #11131b; color: #e2e1ee; min-height: 100vh;">
+			<div class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] min-h-screen flex flex-col items-center justify-center p-md overflow-hidden relative">
 				{/* Top Logo */}
-				<header class="flex justify-center items-center w-full mb-8">
-					<img src={logoUrl} alt="P0 Logo" class="h-20 object-contain" />
+				<header class="flex justify-center items-center w-full mb-12">
+					<img src={logoUrl} alt="P0 Logo" class="h-28 object-contain" />
 				</header>
 
-				<section class="relative w-full max-w-[440px] bg-surface-container border border-outline-variant p-lg rounded-xl shadow-2xl z-10" style="background-color: #1d1f28; border-color: #4e4632; border-width: 1px; border-radius: 12px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+				<section class="relative w-full max-w-[440px] bg-[#1d1f28] border border-[#4e4632] p-10 rounded-2xl shadow-2xl z-10">
 					<div class="absolute top-4 right-4">
-						<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container/20 border border-error-container/30 text-error uppercase tracking-widest" style="color: #ffb4ab; background-color: rgba(147, 0, 10, 0.2); border: 1px solid rgba(147, 0, 10, 0.3);">
+						<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#ffb4ab]/10 border border-[#ffb4ab]/20 text-[#ffb4ab] uppercase tracking-widest">
 							Alpha
 						</span>
 					</div>
 
-					<div class="mb-xl text-center" style="margin-bottom: 40px;">
-						<h2 class="font-headline-md text-headline-md text-on-surface mb-xs" style="font-family: 'Spline Sans'; font-size: 24px; color: #e2e1ee;">Play against P0</h2>
-						<p class="font-body-sm text-body-sm text-on-surface-variant" style="font-family: 'Manrope'; font-size: 14px; color: #d2c5ab;">Enter participant details to continue</p>
+					<div class="mb-10 text-center">
+						<h2 class="font-['Spline_Sans'] font-bold text-2xl mb-xs">Play against P0</h2>
+						<p class="text-sm text-[#d2c5ab]">Enter participant details to continue</p>
 					</div>
 
-					<form class="space-y-md" onSubmit={this.handleLogin}>
-						{error && <p class="text-error text-center mb-4" style="color: #ffb4ab;">{error}</p>}
+					<form class="space-y-6" onSubmit={this.handleLogin}>
+						{error && <p class="text-[#ffb4ab] text-center mb-4 text-sm">{error}</p>}
 
-						<div class="space-y-xs" style="margin-bottom: 24px;">
-							<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" style="font-family: 'Manrope'; font-size: 12px; color: #d2c5ab; display: block; margin-bottom: 4px;">Username</label>
+						<div class="space-y-1">
+							<label class="text-[10px] font-bold text-[#d2c5ab] uppercase tracking-widest">Username</label>
 							<div class="relative">
-								<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d2c5ab;">person</span>
+								<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#d2c5ab] text-[20px]">person</span>
 								<input
-									class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all placeholder:text-on-surface-variant/40"
-									style="width: 100%; background-color: #191b24; border: 1px solid #4e4632; border-radius: 8px; padding: 12px 12px 12px 48px; color: #e2e1ee;"
+									class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg py-3 pl-12 pr-4 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all placeholder:text-[#d2c5ab]/30"
 									placeholder="Enter your username"
 									type="text"
 									value={username}
@@ -516,13 +521,12 @@ class ResearchLoginPage extends preact.Component {
 						</div>
 
 						{/* Password Field */}
-						<div class="space-y-xs" style="margin-bottom: 24px;">
-							<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" style="font-family: 'Manrope'; font-size: 12px; color: #d2c5ab; display: block; margin-bottom: 4px;">Password</label>
+						<div class="space-y-1">
+							<label class="text-[10px] font-bold text-[#d2c5ab] uppercase tracking-widest">Password</label>
 							<div class="relative">
-								<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #d2c5ab;">lock</span>
+								<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#d2c5ab] text-[20px]">lock</span>
 								<input
-									class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all placeholder:text-on-surface-variant/40"
-									style="width: 100%; background-color: #191b24; border: 1px solid #4e4632; border-radius: 8px; padding: 12px 12px 12px 48px; color: #e2e1ee;"
+									class="w-full bg-[#191b24] border border-[#4e4632] rounded-lg py-3 pl-12 pr-4 text-[#e2e1ee] focus:outline-none focus:border-[#ffcb05] transition-all placeholder:text-[#d2c5ab]/30"
 									placeholder="••••••••"
 									type="password"
 									value={password}
@@ -534,8 +538,7 @@ class ResearchLoginPage extends preact.Component {
 
 						{/* Login Button */}
 						<button 
-							class={`w-full bg-primary-container text-on-primary font-bold py-4 rounded-lg hover:brightness-110 active:scale-95 transition-all glow-hover flex items-center justify-center gap-2 mt-4 ${(!username || !password || loading) ? 'opacity-50 cursor-not-allowed' : ''}`}
-							style={`width: 100%; background-color: #ffcb05; color: #3d2f00; font-weight: 700; padding: 16px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; ${(!username || !password || loading) ? 'opacity: 0.5; cursor: not-allowed;' : ''}`}
+							class={`w-full bg-[#ffcb05] text-[#3d2f00] font-bold py-4 rounded-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 mt-4 ${(!username || !password || loading) ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
 							type="submit"
 							disabled={!username || !password || loading}
 						>
@@ -545,19 +548,19 @@ class ResearchLoginPage extends preact.Component {
 					</form>
 
 					{/* Support link */}
-					<div class="mt-xl pt-md border-t border-outline-variant/30" style="margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(78, 70, 50, 0.3);">
-						<div class="flex items-start gap-3 p-sm bg-secondary-container/10 border border-secondary-container/20 rounded-lg" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background-color: rgba(38, 56, 184, 0.1); border: 1px solid rgba(38, 56, 184, 0.2); border-radius: 8px;">
-							<span class="material-symbols-outlined text-secondary text-[18px]" style="color: #bcc2ff;">info</span>
-							<p class="font-body-sm text-body-sm text-on-secondary-container" style="font-family: 'Manrope'; font-size: 14px; color: #aab3ff; margin: 0;">
-								Contact <a class="text-secondary font-bold hover:underline decoration-2 underline-offset-4" style="color: #bcc2ff; font-weight: 700; text-decoration: none;" href="mailto:akkshaysr0107@gmail.com">akkshaysr0107@gmail.com</a> for an ID
+					<div class="mt-10 pt-6 border-t border-[#4e4632]/30">
+						<div class="flex items-start gap-3 p-3 bg-[#3B4CCA]/5 border border-[#3B4CCA]/10 rounded-lg">
+							<span class="material-symbols-outlined text-[#3B4CCA] text-[18px]">info</span>
+							<p class="text-xs text-[#aab3ff] leading-relaxed">
+								Contact <a class="text-[#bcc2ff] font-bold hover:underline" href="mailto:akkshaysr0107@gmail.com">akkshaysr0107@gmail.com</a> for an ID
 							</p>
 						</div>
 					</div>
 				</section>
 
 				{/* Background Decorations */}
-				<div class="fixed -bottom-20 -right-20 w-80 h-80 bg-primary-container/5 rounded-full blur-[100px] pointer-events-none -z-10" style="position: fixed; bottom: -80px; right: -80px; width: 320px; height: 320px; background-color: rgba(255, 203, 5, 0.05); border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -10;"></div>
-				<div class="fixed -top-20 -left-20 w-80 h-80 bg-secondary-container/5 rounded-full blur-[100px] pointer-events-none -z-10" style="position: fixed; top: -80px; left: -80px; width: 320px; height: 320px; background-color: rgba(38, 56, 184, 0.05); border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -10;"></div>
+				<div class="fixed -bottom-20 -right-20 w-80 h-80 bg-[#ffcb05]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+				<div class="fixed -top-20 -left-20 w-80 h-80 bg-[#3B4CCA]/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
 			</div>
 		);
 	}
@@ -588,17 +591,29 @@ class ResearchTeamCard extends preact.Component<{
 
 		return (
 			<div 
-				class={`research-team-card ${isSelected ? 'selected' : ''}`}
+				class={`flex items-center justify-between px-6 py-4 rounded-xl cursor-pointer transition-all border ${
+					isSelected 
+						? 'bg-[#ffcb05]/10 border-[#ffcb05] shadow-[0_0_20px_rgba(255,203,5,0.1)]' 
+						: 'bg-[#161B26] border-[#222938] hover:border-[#4e4632] hover:bg-[#1d2433]'
+				}`}
 				onClick={onClick}
 				onDblClick={onDblClick}
 			>
-				<div class="team-name">{team.name}</div>
-				<div class="team-right-content">
-					<div class="team-icons">
+				<span class={`font-bold text-xl transition-colors whitespace-nowrap mr-8 ${isSelected ? 'text-[#ffcb05]' : 'text-[#e2e1ee]'}`}>
+					{team.name}
+				</span>
+
+				<div class="flex items-center gap-8">
+					<div class="flex gap-1.5 opacity-90 scale-90 origin-right">
 						{this.icons}
 					</div>
-					<div class="selection-indicator">
-						{isSelected && <i class="fa fa-check-circle"></i>}
+					
+					<div class="flex items-center justify-center w-8 h-8 rounded-full border border-[#4e4632] transition-all">
+						{isSelected ? (
+							<span class="material-symbols-outlined text-[#ffcb05] text-2xl font-bold">check_circle</span>
+						) : (
+							<div class="w-2 h-2 rounded-full bg-[#4e4632]/30"></div>
+						)}
 					</div>
 				</div>
 			</div>
