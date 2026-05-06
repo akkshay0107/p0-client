@@ -12,26 +12,47 @@
     --p0-font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+
+
+/* Global Research Theme - Apply to containers */
 body.research-mode:not(.battle-active) {
-    font-family: var(--p0-font) !important;
+    background: var(--p0-bg-dark) !important;
+    overflow: hidden !important;
 }
 
+.research-mode.battle-active #research-root {
+    display: none !important;
+}
 
-/* Global Research Theme - Apply to body and containers */
-body.research-mode,
 .research-mode .research-container,
-.research-mode .research-login-container {
+.research-mode .research-login-container,
+.research-mode #research-root {
     background: var(--p0-bg-dark) !important;
     background-image: radial-gradient(circle at 50% 50%, #111827 0%, #0a0e1a 100%) !important;
     color: var(--p0-text-primary) !important;
+    font-family: var(--p0-font) !important;
 }
 
-/* Revert to default Showdown look when a battle is active */
-body.research-mode.battle-active,
-.research-mode.battle-active #ps-frame {
-    background: #def3ff !important;
-    background-image: linear-gradient(#def3ff, #fff) !important;
-    color: #333 !important;
+/* Ensure battle room uses Showdown defaults */
+.ps-room-battle {
+    font-family: Verdana, sans-serif !important;
+    font-size: 9.2pt !important;
+    z-index: 100 !important;
+    background: #fff !important; /* Force native white background to prevent gray bleed */
+}
+
+/* Fix for icons and images being stacked vertically (e.g. from Tailwind resets) */
+.ps-room-battle img, 
+.tooltip img {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+/* Tooltip Isolation */
+.tooltip, 
+.tooltip * {
+    font-family: Verdana, sans-serif !important;
+    font-size: 9.2pt !important;
 }
 
 /* Specific container sizing */
@@ -61,11 +82,13 @@ body.research-mode:not(.battle-active)::before {
 }
 
 .research-mode .header,
+.research-mode .header-logo,
 .research-mode .ps-room-wrapper.right-panel,
 .research-mode .mainmenufooter,
 .research-mode .mainmenu-mini-windows,
 .research-mode .maintabbarbottom,
 .research-mode .tabbar,
+.research-mode .roomtab,
 .research-mode .roomcounters,
 .research-mode .roomlist,
 .research-mode .userbar,
@@ -81,6 +104,9 @@ body.research-mode:not(.battle-active)::before {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
+}
+
+.research-mode .ps-room:not(.ps-room-battle) {
     border: none !important;
     background: transparent !important;
 }
@@ -328,34 +354,27 @@ body.research-mode:not(.battle-active) .button:disabled {
     box-shadow: none !important;
 }
 
-/* Explicitly prevent research button styles and Tailwind reset from affecting battle buttons */
-body.research-mode.battle-active .ps-room.battle .button,
-body.research-mode.battle-active .ps-room.battle button {
-    all: revert !important;
+/* Ensure battle buttons use default Showdown styling */
+body.research-mode .ps-room-battle .button,
+body.research-mode .ps-room-battle button {
     font-family: Verdana, Helvetica, Arial, sans-serif !important;
-    font-size: 9pt !important;
-    padding: 2px 10px !important;
-    margin: 0 !important;
-    cursor: pointer !important;
-    border: 1px solid #aaa !important;
-    background: #e3e3e3 !important;
-    color: black !important;
-    border-radius: 2px !important;
-    display: inline-block !important;
+    font-size: 8.5pt !important;
+    font-weight: normal !important;
+    text-transform: none !important;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
+/* Custom Scrollbar - Scoped to Research UI */
+.research-mode ::-webkit-scrollbar {
     width: 8px;
 }
-::-webkit-scrollbar-track {
+.research-mode ::-webkit-scrollbar-track {
     background: var(--p0-bg-dark);
 }
-::-webkit-scrollbar-thumb {
+.research-mode ::-webkit-scrollbar-thumb {
     background: #1f2937;
     border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
+.research-mode ::-webkit-scrollbar-thumb:hover {
     background: #374151;
 }
 

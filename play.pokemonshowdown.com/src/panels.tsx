@@ -300,8 +300,9 @@ export function PSPanelWrapper(props: {
 	const style = PSView.posStyle(room) as any;
 	if (props.scrollable === 'hidden') style.overflow = 'hidden';
 	const tinyLayout = room.width < 620 ? ' tiny-layout' : '';
+	const battleClass = room.id.startsWith('battle-') ? ' ps-room-battle' : '';
 	return <div
-		class={`ps-room${room.id === '' ? '' : ' ps-room-light'}${props.scrollable === true ? ' scrollable' : ''}${tinyLayout}`}
+		class={`ps-room${room.id === '' ? '' : ' ps-room-light'}${props.scrollable === true ? ' scrollable' : ''}${tinyLayout}${battleClass}`}
 		id={`room-${room.id}`} role="tabpanel" aria-labelledby={`roomtab-${room.id}`}
 		style={style} onClick={props.focusClick ? PSView.focusIfNoSelection : undefined} onDragEnter={props.onDragEnter}
 	>
