@@ -616,6 +616,7 @@ class PSUser extends PSStreamModel<PSLoginState | null> {
 	initializing = true;
 	gapiLoaded = false;
 	nameRegExp: RegExp | null = null;
+	state: PSLoginState | null = null;
 	setName(fullName: string, named: boolean, avatar: string) {
 		const loggingIn = (!this.named && named);
 		const { name, group } = BattleTextParser.parseNameParts(fullName);
@@ -718,14 +719,16 @@ class PSUser extends PSStreamModel<PSLoginState | null> {
 				}
 				this.updateLogin({
 					name,
-					error: data?.error || 'Wrong password.',
+					error: data?.error || 'Wrong username or password.',
 					...special as any,
 				});
 			}
 		});
 	}
 	updateLogin(update: PSLoginState) {
+		this.state = update;
 		this.update(update);
+		if (Config.researchMode) return;
 		if (!PS.rooms['login']) {
 			PS.join('login' as RoomID, { args: update });
 		}

@@ -129,7 +129,7 @@ return preact.h(ResearchInfoPage,{onContinue:this.continueToTeams});
 }
 
 return(
-preact.h("div",{"class":"research-landing dark bg-[#11131b] min-h-screen w-full relative overflow-hidden text-[#e2e1ee] font-['Manrope']"},
+preact.h("div",{id:"research-root","class":"research-landing dark bg-[#11131b] min-h-screen w-full relative overflow-hidden text-[#e2e1ee] font-['Manrope']"},
 preact.h("button",{
 "class":"fixed top-6 left-6 w-12 h-12 rounded-lg bg-[#1d1f28] border border-[#4e4632] text-[#d2c5ab] flex items-center justify-center hover:text-[#ffcb05] hover:border-[#ffcb05] transition-all z-[100] shadow-lg",
 onClick:function(){return _this3.setState({currentPage:'info'});},
@@ -181,7 +181,7 @@ render=function render(){
 var logoUrl="p0-logo.png";
 
 return(
-preact.h("div",{"class":"dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] h-screen w-full flex flex-col items-center p-md relative overflow-hidden"},
+preact.h("div",{id:"research-root","class":"dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] h-screen w-full flex flex-col items-center p-md relative overflow-hidden"},
 preact.h("div",{"class":"w-full max-w-4xl z-10 flex flex-col h-full justify-center"},
 
 preact.h("div",{"class":"text-center mb-8"},
@@ -467,6 +467,20 @@ username:'',
 password:'',
 loading:false
 };_this6.
+userSubscription=null;_this6.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 handleLogin=function(e){
 e.preventDefault();
@@ -474,16 +488,24 @@ var _this6$state=_this6.state,username=_this6$state.username,password=_this6$sta
 if(!username||!password)return;
 
 _this6.setState({loading:true});
-PS.user.changeNameWithPassword(username,password);
-};return _this6;}_inheritsLoose(ResearchLoginPage,_preact$Component5);var _proto5=ResearchLoginPage.prototype;_proto5.
 
-render=function render(){var _PS$user$state,_this7=this;
+PS.user.update({error:''});
+PS.user.changeNameWithPassword(username,password);
+};return _this6;}_inheritsLoose(ResearchLoginPage,_preact$Component5);var _proto5=ResearchLoginPage.prototype;_proto5.componentDidMount=function componentDidMount(){var _this7=this;this.userSubscription=PS.user.subscribe(function(){var _PS$user$state;if((_PS$user$state=PS.user.state)!=null&&_PS$user$state.error&&_this7.state.loading){_this7.setState({loading:false});}});};_proto5.componentWillUnmount=function componentWillUnmount(){if(this.userSubscription)this.userSubscription.unsubscribe();};_proto5.
+
+componentDidUpdate=function componentDidUpdate(){var _PS$user$state2;
+if(this.state.loading&&(_PS$user$state2=PS.user.state)!=null&&_PS$user$state2.error){
+this.setState({loading:false});
+}
+};_proto5.
+
+render=function render(){var _PS$user$state3,_this8=this;
 var _this$state3=this.state,username=_this$state3.username,password=_this$state3.password,loading=_this$state3.loading;
-var error=(_PS$user$state=PS.user.state)==null?void 0:_PS$user$state.error;
+var error=(_PS$user$state3=PS.user.state)==null?void 0:_PS$user$state3.error;
 var logoUrl="p0-logo.png";
 
 return(
-preact.h("div",{"class":"dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] min-h-screen flex flex-col items-center justify-center p-md overflow-hidden relative"},
+preact.h("div",{id:"research-root","class":"dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] min-h-screen flex flex-col items-center justify-center p-md overflow-hidden relative"},
 
 preact.h("header",{"class":"flex justify-center items-center w-full mb-12"},
 preact.h("img",{src:logoUrl,alt:"P0 Logo","class":"h-28 object-contain"})
@@ -513,7 +535,7 @@ preact.h("input",{
 placeholder:"Enter your username",
 type:"text",
 value:username,
-onInput:function(e){return _this7.setState({username:e.target.value});},
+onInput:function(e){return _this8.setState({username:e.target.value});},
 disabled:loading,
 autoFocus:true}
 )
@@ -530,7 +552,7 @@ preact.h("input",{
 placeholder:"\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
 type:"password",
 value:password,
-onInput:function(e){return _this7.setState({password:e.target.value});},
+onInput:function(e){return _this8.setState({password:e.target.value});},
 disabled:loading}
 )
 )
@@ -551,8 +573,8 @@ loading?'Logging in...':'Login',
 preact.h("div",{"class":"mt-10 pt-6 border-t border-[#4e4632]/30"},
 preact.h("div",{"class":"flex items-start gap-3 p-3 bg-[#3B4CCA]/5 border border-[#3B4CCA]/10 rounded-lg"},
 preact.h("span",{"class":"material-symbols-outlined text-[#3B4CCA] text-[18px]"},"info"),
-preact.h("p",{"class":"text-xs text-[#aab3ff] leading-relaxed"},"Contact ",
-preact.h("a",{"class":"text-[#bcc2ff] font-bold hover:underline",href:"mailto:akkshaysr0107@gmail.com"},"akkshaysr0107@gmail.com")," for an ID"
+preact.h("p",{"class":"text-xs text-[#aab3ff] leading-relaxed"},"Want to play? Contact ",
+preact.h("a",{"class":"text-[#bcc2ff] font-bold hover:underline",href:"mailto:akkshaysr0107@gmail.com"},"akkshaysr0107@gmail.com")," for a login."
 )
 )
 )
@@ -566,14 +588,14 @@ preact.h("div",{"class":"fixed -top-20 -left-20 w-80 h-80 bg-[#3B4CCA]/5 rounded
 };return ResearchLoginPage;}(preact.Component);var
 
 
-ResearchTeamCard=function(_preact$Component6){function ResearchTeamCard(){var _this8;for(var _len4=arguments.length,args=new Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}_this8=_preact$Component6.call.apply(_preact$Component6,[this].concat(args))||this;_this8.
+ResearchTeamCard=function(_preact$Component6){function ResearchTeamCard(){var _this9;for(var _len4=arguments.length,args=new Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}_this9=_preact$Component6.call.apply(_preact$Component6,[this].concat(args))||this;_this9.
 
 
 
 
 
-packedTeam='';_this8.
-icons=null;return _this8;}_inheritsLoose(ResearchTeamCard,_preact$Component6);var _proto6=ResearchTeamCard.prototype;_proto6.
+packedTeam='';_this9.
+icons=null;return _this9;}_inheritsLoose(ResearchTeamCard,_preact$Component6);var _proto6=ResearchTeamCard.prototype;_proto6.
 
 componentWillMount=function componentWillMount(){
 var team=this.props.team;

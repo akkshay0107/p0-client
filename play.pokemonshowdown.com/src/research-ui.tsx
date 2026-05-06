@@ -129,7 +129,7 @@ export class ResearchLandingPage extends preact.Component {
 		}
 
 		return (
-			<div class="research-landing dark bg-[#11131b] min-h-screen w-full relative overflow-hidden text-[#e2e1ee] font-['Manrope']">
+			<div id="research-root" class="research-landing dark bg-[#11131b] min-h-screen w-full relative overflow-hidden text-[#e2e1ee] font-['Manrope']">
 				<button 
 					class="fixed top-6 left-6 w-12 h-12 rounded-lg bg-[#1d1f28] border border-[#4e4632] text-[#d2c5ab] flex items-center justify-center hover:text-[#ffcb05] hover:border-[#ffcb05] transition-all z-[100] shadow-lg"
 					onClick={() => this.setState({ currentPage: 'info' })}
@@ -181,7 +181,7 @@ class ResearchInfoPage extends preact.Component<{ onContinue: () => void }> {
 		const logoUrl = "p0-logo.png";
 
 		return (
-			<div class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] h-screen w-full flex flex-col items-center p-md relative overflow-hidden">
+			<div id="research-root" class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] h-screen w-full flex flex-col items-center p-md relative overflow-hidden">
 				<div class="w-full max-w-4xl z-10 flex flex-col h-full justify-center">
 					{/* Hero Branding Section */}
 					<div class="text-center mb-8">
@@ -467,6 +467,20 @@ class ResearchLoginPage extends preact.Component {
 		password: '',
 		loading: false,
 	};
+	userSubscription: any = null;
+
+	override componentDidMount() {
+		this.userSubscription = PS.user.subscribe(() => {
+			if (PS.user.state?.error && this.state.loading) {
+				this.setState({ loading: false });
+			}
+		});
+	}
+
+	override componentWillUnmount() {
+		if (this.userSubscription) this.userSubscription.unsubscribe();
+	}
+
 
 	handleLogin = (e: Event) => {
 		e.preventDefault();
@@ -474,8 +488,16 @@ class ResearchLoginPage extends preact.Component {
 		if (!username || !password) return;
 
 		this.setState({ loading: true });
+		// Clear any existing errors so the loading state doesn't immediately reset
+		PS.user.update({ error: '' } as any);
 		PS.user.changeNameWithPassword(username, password);
 	};
+
+	override componentDidUpdate() {
+		if (this.state.loading && PS.user.state?.error) {
+			this.setState({ loading: false });
+		}
+	}
 
 	override render() {
 		const { username, password, loading } = this.state;
@@ -483,7 +505,7 @@ class ResearchLoginPage extends preact.Component {
 		const logoUrl = "p0-logo.png";
 
 		return (
-			<div class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] min-h-screen flex flex-col items-center justify-center p-md overflow-hidden relative">
+			<div id="research-root" class="dark bg-[#11131b] text-[#e2e1ee] font-['Manrope'] min-h-screen flex flex-col items-center justify-center p-md overflow-hidden relative">
 				{/* Top Logo */}
 				<header class="flex justify-center items-center w-full mb-12">
 					<img src={logoUrl} alt="P0 Logo" class="h-28 object-contain" />
@@ -552,7 +574,7 @@ class ResearchLoginPage extends preact.Component {
 						<div class="flex items-start gap-3 p-3 bg-[#3B4CCA]/5 border border-[#3B4CCA]/10 rounded-lg">
 							<span class="material-symbols-outlined text-[#3B4CCA] text-[18px]">info</span>
 							<p class="text-xs text-[#aab3ff] leading-relaxed">
-								Contact <a class="text-[#bcc2ff] font-bold hover:underline" href="mailto:akkshaysr0107@gmail.com">akkshaysr0107@gmail.com</a> for an ID
+								Want to play? Contact <a class="text-[#bcc2ff] font-bold hover:underline" href="mailto:akkshaysr0107@gmail.com">akkshaysr0107@gmail.com</a> for a login.
 							</p>
 						</div>
 					</div>
