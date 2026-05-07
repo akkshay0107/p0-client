@@ -44,11 +44,14 @@ body.research-mode:not(.battle-active) {
 /* Fix for icons and images being stacked vertically (e.g. from Tailwind resets) */
 .ps-room-battle img, 
 .tooltip img {
-    display: inline-block !important;
+    display: inline-block;
     vertical-align: middle !important;
 }
 
 /* Tooltip Isolation */
+#tooltipwrapper {
+    z-index: 2000 !important;
+}
 .tooltip, 
 .tooltip * {
     font-family: Verdana, sans-serif !important;
