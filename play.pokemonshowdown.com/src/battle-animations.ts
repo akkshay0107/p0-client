@@ -843,7 +843,7 @@ export class BattleScene implements BattleSceneStub {
 		this.$tooltips.html(tooltipBuf);
 	}
 
-	teamPreview() {
+	teamPreview(silent?: boolean) {
 		let newBGNum = 0;
 		for (let siden = 0; siden < 2 || (this.battle.gameType === 'multi' && siden < 4); siden++) {
 			let side = this.battle.sides[siden];
@@ -898,7 +898,7 @@ export class BattleScene implements BattleSceneStub {
 				buf2 += '</div>';
 			}
 			side.totalPokemon = side.pokemon.length;
-			if (textBuf) {
+			if (textBuf && !silent) {
 				this.log.addDiv('chat battle-history',
 					`<strong>${BattleLog.escapeHTML(side.name)}'s team:</strong> <em style="color:#445566;display:block;">${BattleLog.escapeHTML(textBuf)}</em>`
 				);
@@ -916,7 +916,7 @@ export class BattleScene implements BattleSceneStub {
 		if (newBGNum !== 0) {
 			this.setBgm(newBGNum);
 		}
-		this.wait(1000);
+		if (!silent) this.wait(1000);
 		this.updateSidebars();
 	}
 

@@ -3666,6 +3666,7 @@ export class Battle {
 				if (set.teraType) pokemon.teraType = set.teraType;
 			}
 			this.log(args, kwArgs);
+			this.scene.teamPreview(true);
 			break;
 		}
 		case 'switch': case 'drag': case 'replace': {

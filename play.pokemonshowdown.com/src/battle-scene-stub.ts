@@ -49,7 +49,7 @@ export class BattleSceneStub {
 	runResidualAnim(moveid: ID, pokemon: Pokemon): void { }
 	runStatusAnim(moveid: ID, participants: Pokemon[]): void { }
 	startAnimations(): void { }
-	teamPreview(): void { }
+	teamPreview(silent?: boolean): void { }
 	resetSides(): void { }
 	updateGen(): void { }
 	updateSidebar(side: Side): void { }
